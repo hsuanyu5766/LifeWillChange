@@ -38,7 +38,7 @@
     scene('s06-questions','ch6','從選擇走向生命：人生三問','走過照片、他人的期待與自己的選擇，現在，把問題留給自己。','ch06-questions',{steps:['人為何而活？','應如何生活？','要如何才能活出應活的生命？']}),
     scene('s06-silence','ch6','給自己十秒鐘','不用回答別人，只要誠實面對自己。','ch06-silence'),
     scene('s06-ending','ch6','看見自己，理解他人，成為自己','覺察自己、看見不同的理由，最後回到自己相信的生命價值。','ch06-ending',{steps:['看見自己','理解他人','成為自己']}),
-    scene('s06-curtain','ch6','一張照片，為什麼讓我在意？','願我們看見角色，也不忘看見人。','ch06-curtain')
+    scene('s06-curtain','ch6','一張照片，為什麼讓我在意？','或許我們真正在意的不是照片本身，而是在期待與落差之間擁抱自己。','ch06-curtain')
   ];
   const roleCards = [
     {id:'teacher-1',badge:'01',role:'教師',title:'新手教師',focus:'專業形象、被認可',quote:'我才剛成為正式老師，還在努力建立學生與家長的信任。',persona:'專業形象、被認可',thought:'我才剛成為正式老師，還在努力建立學生與家長的信任。',image:'assets/rolecards/teacher-1.webp',thumb:'assets/rolecards/teacher-1-thumb.webp'},
@@ -81,6 +81,6 @@
     's06-questions','s06-silence','s06-ending','s06-curtain'
   ];
   const presentationScenes=presentationIds.map(id=>scenes.find(s=>s.id===id));
-  const spec = Object.freeze({id:'photo-lecture',title:'一張照片，為什麼讓我在意？',version:'0.9.8.4',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8,groupNames});
+  const spec = Object.freeze({id:'photo-lecture',title:'一張照片，為什麼讓我在意？',version:'0.9.8.5',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8,groupNames});
   window.LectureContent = spec;
 })();

@@ -44,6 +44,14 @@
  let state=Adapter.get();
  let lastAudienceSignature='';
  let scenarioClockTimer=null;
+ // 在三階結語期間預先快取結尾畫面；不讓照片延遲第一頁載入。
+ let endingPreloadImage=null;
+ function preloadEndingImage(){
+   if(endingPreloadImage||typeof Image==='undefined')return;
+   endingPreloadImage=new Image();
+   endingPreloadImage.decoding='async';
+   endingPreloadImage.src='assets/visual-097/ending-final-1671.webp';
+ }
  let lastTugCommit=0;
  let localGroup=0;try{localGroup=Number(sessionStorage.getItem('lecture-demo-group')||0)}catch{}
  const audienceSignature=()=>{
@@ -241,12 +249,13 @@
    ${!Adapter.status.authenticated?`<form id="host-login-form"><label>Email</label><input name="email" type="email" required autocomplete="username"><label>密碼</label><input name="password" type="password" required autocomplete="current-password"><button class="btn primary submit" type="submit">登入主控</button></form>`:
    Adapter.status.awaitingChoice?`<div class="session-choice"><div class="session-choice-card"><div class="eyebrow">偵測到上次使用的講座</div><h2>新場次預設清除舊紀錄</h2><p class="muted">選擇「清除舊資料並重新開始」會移除這位主持人的歷史場次、投票回覆、參與者與角色抽卡紀錄；此動作不可復原。若需要保留資料，請選擇下方的「保留歷史」模式。</p><div class="session-choice-actions"><button class="btn" type="button" data-action="resume-session" ${ui.entryBusy?'disabled':''}>繼續既有活動</button><button class="btn primary" type="button" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" type="button" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>建立新場次（保留歷史）</button></div><p class="muted">新場次會從零開始，並產生新的 A 投影連結與 C 聽眾 QR Code；舊投影與聽眾連結會失效（清空模式）。</p></div></div>`:
    `<div class="session-choice-actions"><button class="btn primary submit" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>保留歷史另開場次</button></div>`}
-   ${Adapter.status.authenticated?`<p class="build-indicator">網站版本：v0.9.8.4 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署是否完整</a></p><p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
+   ${Adapter.status.authenticated?`<p class="build-indicator">網站版本：v0.9.8.5 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署是否完整</a></p><p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
    ${Adapter.status.error?`<p class="caution">${htmlEsc(Adapter.status.error)}</p>`:''}${ui.toast?`<p class="caution transient-notice" role="alert">${htmlEsc(ui.toast)}</p>`:''}</div></main></div></div>`;
  }
  function stageView(){
   const scene=currentScene(),chapter=currChapter(),index=playIndex(scene.id),run=relevantRun(scene),activeRun=active();
-  return `<div class="shell stage stage-clean ${scene.ch==='ch6'?'ch06-stage-shell':''} ${['s01-welcome','s01-photo','s02-results','s02-reasons'].includes(scene.id)?'v097-s12-stage v097-s12-'+scene.id:''} ${['s03-cards','s03-discuss','s03-share'].includes(scene.id)?'v097-s3-stage v097-s3-'+scene.id:''} ${['s04-intro','s04-compare','s04-action','s04-boundary'].includes(scene.id)?'v097-s4-stage v097-s4-'+scene.id:''} ${['s05-vote','s05-live','s05-integrate'].includes(scene.id)?'v097-s5-stage v097-s5-'+scene.id:''} ${['s06-questions','s06-silence','s06-ending','s06-curtain'].includes(scene.id)?'v097-s6-stage v097-s6-'+scene.id:''}">
+  if(scene.id==='s06-ending')preloadEndingImage();
+  return `<div class="shell stage stage-clean ${scene.ch==='ch6'?'ch06-stage-shell':''} ${scene.id==='s06-curtain'?'v0985-ending-stage':''} ${['s01-welcome','s01-photo','s02-results','s02-reasons'].includes(scene.id)?'v097-s12-stage v097-s12-'+scene.id:''} ${['s03-cards','s03-discuss','s03-share'].includes(scene.id)?'v097-s3-stage v097-s3-'+scene.id:''} ${['s04-intro','s04-compare','s04-action','s04-boundary'].includes(scene.id)?'v097-s4-stage v097-s4-'+scene.id:''} ${['s05-vote','s05-live','s05-integrate'].includes(scene.id)?'v097-s5-stage v097-s5-'+scene.id:''} ${['s06-questions','s06-silence','s06-ending','s06-curtain'].includes(scene.id)?'v097-s6-stage v097-s6-'+scene.id:''}">
     ${!remote?'<div class="demo-banner">本機演示 · 非跨裝置連線</div>':''}
     <header class="topbar"><div class="brand">一張照片，為什麼讓我在意？<small>第 ${spec.chapters.indexOf(chapter)+1} 環節｜${htmlEsc(chapter.name)}</small></div><div class="stage-progress">${index<0?'舊版':String(index+1).padStart(2,'0')} / ${playlist.length}</div></header>
     <main class="viewport unified-stage ${(['rolecards','scenario-intro','scenario-discuss','scenario-share','scenario-turn','discussion-bridge'].includes(scene.kind)?'scenario-stage-viewport ch03-viewport':['ch04-intro','ch04-compare','ch04-action','ch04-results','ch04-boundary'].includes(scene.kind)?'ch04-viewport':scene.kind.startsWith('ch05-')?'ch05-viewport':scene.kind.startsWith('ch06-')?'ch06-viewport':'')}"><section class="story">
@@ -262,7 +271,7 @@
   const scene=currentScene(),chapter=currChapter(),open=active(),run=relevantRun(scene),a=scene.activityId?spec.activities[scene.activityId]:null;
   if(!ui.reviewRunId&&state.runs.length)ui.reviewRunId=state.runs[state.runs.length-1].id;
   return `<div class="control-shell">
-   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.4</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p><p class="build-indicator">目前前端 v0.9.8.4 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署版本</a></p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
+   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.5</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p><p class="build-indicator">目前前端 v0.9.8.5 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署版本</a></p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
    ${!remote?'<div class="demo-banner">本機示範，須部署 Supabase 才能跨裝置操作</div>':''}
    <nav class="director-chapters" aria-label="六環節目前進度">${spec.chapters.map((c,i)=>`<div class="director-chapter ${chapter.id===c.id?'active':''}"><span>0${i+1}</span><strong>${htmlEsc(c.name)}</strong></div>`).join('')}</nav>
    <div class="control-grid">
@@ -476,7 +485,7 @@
    }
    if(scene.kind==='ch06-silence')return `<div class="ch06-scene ch06-silence" data-scene="${scene.id}"><div class="ch06-topline">QUIET MOMENT · 靜思</div><h2>給自己十秒鐘</h2><p>不用回答別人，只要誠實面對自己。</p><strong class="ch06-clock-value">00:${String(remainingCh06Seconds()).padStart(2,'0')}</strong><div class="ch06-time-track"><i class="ch06-time-fill" style="width:${remainingCh06Seconds()*10}%"></i></div><div class="ch06-clock-state">等待主持人開始</div></div>`;
    if(scene.kind==='ch06-ending')return `<div class="ch06-scene ch06-ending" data-scene="${scene.id}"><div class="ch06-ending-label">LOOK INWARD · UNDERSTAND OTHERS · BECOME YOURSELF</div><svg class="ch06-stairs" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">${['M105 835 H535 V652','M535 652 H960 V417','M960 417 H1515 V232'].map((d,i)=>`<g class="ch06-stair-segment ${phase>=i+1?'shown':''}" data-ch06-step="${i+1}"><path class="ch06-stair-glow" d="${d}"/><path class="ch06-stair-line" d="${d}"/></g>`).join('')}</svg><div class="ch06-stair-title step1 ${phase>=1?'shown':''}" data-ch06-step="1"><span>◉　第一階</span><h2>看見自己</h2><p>覺察自己的感受與期待</p></div><div class="ch06-stair-title step2 ${phase>=2?'shown':''}" data-ch06-step="2"><span>♧　第二階</span><h2>理解他人</h2><p>看見不同立場的理由</p></div><div class="ch06-stair-title step3 ${phase>=3?'shown':''}" data-ch06-step="3"><span>✦　第三階</span><h2>成為自己</h2><p>實踐自己相信的價值</p></div><div class="ch06-final-whisper ${phase===3?'shown':''}">讓選擇，成為生命的實踐。</div></div>`;
-   if(scene.kind==='ch06-curtain')return `<div class="ch06-scene ch06-curtain" data-scene="${scene.id}"><div class="ch06-curtain-kicker">THE END · LIFE EDUCATION</div><div class="ch06-curtain-main"><span class="ch06-curtain-mark">✦</span><h2>一張照片，為什麼讓我在意？</h2><p>願我們看見角色，也不忘看見人。</p><i></i><small>感謝你的參與</small></div></div>`;
+   if(scene.kind==='ch06-curtain')return `<div class="ch06-scene ch06-curtain v0985-ending-art" data-scene="${scene.id}"><picture class="v0985-ending-picture"><source type="image/webp" srcset="assets/visual-097/ending-final-1280.webp 1280w, assets/visual-097/ending-final-1671.webp 1671w" sizes="100vw"/><img class="v0985-ending-image" src="assets/visual-097/ending-final-1671.webp" alt="或許我們真正在意的不是照片本身，而是在期待與落差之間擁抱自己。" decoding="async" fetchpriority="high"/></picture></div>`;
    return '';
  }
  function visual(scene,run){
