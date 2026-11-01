@@ -1,6 +1,14 @@
 (function(){
  'use strict';
  const spec=window.LectureContent,Core=window.LectureCore,Adapter=window.LectureAdapter,PhotoFlow=window.LecturePhotoFlow;
+ // Stop mixed-version deployments instead of silently showing old text or a stale reset flow.
+ const expectedBuild=window.__LECTURE_EXPECTED_VERSION__;
+ if(expectedBuild && spec?.version!==expectedBuild){
+   const root=document.querySelector('#app');
+   if(root)root.innerHTML='<main style="max-width:680px;margin:12vh auto;padding:32px;font:18px/1.7 sans-serif;color:#17314b"><h1>網站檔案版本不一致</h1><p>目前載入的首頁和程式碼不是同一版本；請重新上傳整套網站必要檔案，並開啟 <a href="version-check.html">版本檢查頁</a>。</p><p>此狀態已停止操作，以免誤用舊版場次清除流程。</p></main>';
+   return;
+ }
+
  const params=new URLSearchParams(location.search),view=params.get('view')||'control',audience=view==='audience',stageOnly=view==='stage',controller=!audience&&!stageOnly;
  const remote=Adapter.type==='supabase';
  const playlist=spec.presentationScenes||spec.scenes;
@@ -143,7 +151,7 @@
    clearToast();render()
  }catch(e){if(remote&&/stale revision/i.test(e.message)){await Adapter.refresh(true);toast('講座狀態已更新，請再操作一次')}else toast(e.message||'操作失敗')}}
  function nav(delta){const next=playNeighbors(state.currentSceneId,delta);if(next){if(delta>0&&state.currentSceneId==='s01-photo'&&!PhotoFlow.info(state).readyForResults){toast('請先完成共用畫面的兩輪投票，再進入統計比較');return}if(next.ch==='ch6'&&state.activeRunId){toast('請先結束目前開放的作答，再進入第六環節');return}commit({type:'NAVIGATE',sceneId:next.id})}}
- function roleLink(nextView){const u=new URL(location.href);u.searchParams.set('view',nextView);u.searchParams.set('build','v0982');if(remote&&Adapter.sessionId)u.searchParams.set('session',Adapter.sessionId);u.hash='';return u.href}
+ function roleLink(nextView){const u=new URL(location.href);u.searchParams.set('view',nextView);u.searchParams.set('build','v0983');if(remote&&Adapter.sessionId)u.searchParams.set('session',Adapter.sessionId);u.hash='';return u.href}
  function audienceLink(){return roleLink('audience')}
  function stageLink(token){const u=new URL(roleLink('stage'));const key=token||(remote?Adapter.stageToken:null);if(remote){if(!key)throw Error('尚未取得投影授權，請稍後重試');u.hash=new URLSearchParams({stage:key}).toString()}return u.href}
  function controlLink(){return roleLink('control')}
@@ -222,9 +230,9 @@
    if(audience)return Adapter.status.needsGroup?groupJoinView():`<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">一張照片，為什麼讓我在意？</div></header><main><div class="locked"><div class="lock-icon">◌</div><h1>正在加入講座</h1><p>${htmlEsc(Adapter.status.error||'正在確認本場講座的參與資格，請保持頁面開啟。')}</p><button class="btn" data-action="retry">重新連線</button></div></main></div></div>`;
    return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">主持人主控｜一張照片，為什麼讓我在意？</div></header><main><div class="mobile-activity"><h1>${Adapter.status.authenticated?'講座場次選擇':'主控驗證'}</h1><p>${Adapter.status.authenticated?'已登入主持人帳號，請選擇要操作的講座。':'請使用已獲授權的主持人帳號登入，在這裡控制全場畫面與回覆。'}</p>
    ${!Adapter.status.authenticated?`<form id="host-login-form"><label>Email</label><input name="email" type="email" required autocomplete="username"><label>密碼</label><input name="password" type="password" required autocomplete="current-password"><button class="btn primary submit" type="submit">登入主控</button></form>`:
-   Adapter.status.awaitingChoice?`<div class="session-choice"><div class="session-choice-card"><div class="eyebrow">偵測到上次使用的講座</div><h2>繼續原場次，或清空後重新開始？</h2><p class="muted">清空重開會刪除這位主持人過去的講座場次及其參與者、投票、角色抽取紀錄；不可復原。請先備份重要資料。</p><div class="session-choice-actions"><button class="btn" type="button" data-action="resume-session" ${ui.entryBusy?'disabled':''}>繼續既有活動</button><button class="btn primary" type="button" data-action="create-session" ${ui.entryBusy?'disabled':''}>清空舊資料並開始新場次</button><button class="btn ghost" type="button" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>建立新場次（保留歷史）</button></div><p class="muted">新場次會從零開始，並產生新的 A 投影連結與 C 聽眾 QR Code；舊投影與聽眾連結會失效（清空模式）。</p></div></div>`:
-   `<div class="session-choice-actions"><button class="btn primary submit" data-action="create-session" ${ui.entryBusy?'disabled':''}>清空舊資料並開始新場次</button><button class="btn ghost" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>保留歷史另開場次</button></div>`}
-   ${Adapter.status.authenticated?`<p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
+   Adapter.status.awaitingChoice?`<div class="session-choice"><div class="session-choice-card"><div class="eyebrow">偵測到上次使用的講座</div><h2>新場次預設清除舊紀錄</h2><p class="muted">選擇「清除舊資料並重新開始」會移除這位主持人的歷史場次、投票回覆、參與者與角色抽卡紀錄；此動作不可復原。若需要保留資料，請選擇下方的「保留歷史」模式。</p><div class="session-choice-actions"><button class="btn" type="button" data-action="resume-session" ${ui.entryBusy?'disabled':''}>繼續既有活動</button><button class="btn primary" type="button" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" type="button" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>建立新場次（保留歷史）</button></div><p class="muted">新場次會從零開始，並產生新的 A 投影連結與 C 聽眾 QR Code；舊投影與聽眾連結會失效（清空模式）。</p></div></div>`:
+   `<div class="session-choice-actions"><button class="btn primary submit" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>保留歷史另開場次</button></div>`}
+   ${Adapter.status.authenticated?`<p class="build-indicator">網站版本：v0.9.8.3 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署是否完整</a></p><p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
    ${Adapter.status.error?`<p class="caution">${htmlEsc(Adapter.status.error)}</p>`:''}${ui.toast?`<p class="caution transient-notice" role="alert">${htmlEsc(ui.toast)}</p>`:''}</div></main></div></div>`;
  }
  function stageView(){
@@ -245,7 +253,7 @@
   const scene=currentScene(),chapter=currChapter(),open=active(),run=relevantRun(scene),a=scene.activityId?spec.activities[scene.activityId]:null;
   if(!ui.reviewRunId&&state.runs.length)ui.reviewRunId=state.runs[state.runs.length-1].id;
   return `<div class="control-shell">
-   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.2</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
+   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.3</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p><p class="build-indicator">目前前端 v0.9.8.3 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署版本</a></p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
    ${!remote?'<div class="demo-banner">本機示範，須部署 Supabase 才能跨裝置操作</div>':''}
    <nav class="director-chapters" aria-label="六環節目前進度">${spec.chapters.map((c,i)=>`<div class="director-chapter ${chapter.id===c.id?'active':''}"><span>0${i+1}</span><strong>${htmlEsc(c.name)}</strong></div>`).join('')}</nav>
    <div class="control-grid">
@@ -647,7 +655,7 @@
        if(prompt('請輸入「清空」以確認刪除歷史場次與回覆：')!=='清空'){toast('已取消清空；沒有變更場次');return}
      }else if(!confirm('確定保留所有歷史資料，另外建立全新場次？\n新場次有獨立的投票、抽卡及專屬連結。'))return;
      ui.entryBusy=true;render();
-     Adapter.createSession(destructive?'reset':'preserve').catch(err=>toast(err.message)).finally(()=>{ui.entryBusy=false;render()});
+     Adapter.createSession(destructive?'reset':'preserve').then(()=>{toast(destructive?'清除模式已成功建立新場次；請使用新的 A／C 連結':'已保留歷史，另開新的空白場次',6500)}).catch(err=>toast(err.message)).finally(()=>{ui.entryBusy=false;render()});
    }
    else if(action==='session-chooser'&&remote){Adapter.showSessionChooser().catch(err=>toast(err.message))}
    else if(action==='logout'&&remote){Adapter.logout().catch(err=>toast(err.message))}
