@@ -1,31 +1,33 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>部署版本自我檢查｜v0.9.8.4</title>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>部署版本自我檢查｜v0.9.8.5</title>
 <style>
 :root{color-scheme:light}body{font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;background:#edf2f5;color:#163149;margin:0;padding:28px}
 main{max-width:840px;margin:auto;background:white;border-radius:20px;padding:26px;box-shadow:0 8px 34px #132c4320}h1{font-size:26px}p{color:#4a6071}.item{padding:12px 4px;border-bottom:1px solid #e7edf2;display:flex;justify-content:space-between;gap:12px;align-items:start}.status{font-weight:700;white-space:nowrap}.pass{color:#13764c}.fail{color:#b43732}.waiting{color:#5d7080}button{background:#163e59;color:white;border:0;border-radius:10px;padding:10px 17px;font-size:16px;cursor:pointer}code{word-break:break-all}small{display:block;color:#536b7c}
-</style></head><body><main><h1>網站版本與檔案完整性檢查</h1><p>本頁只讀取公開網站程式檔，不會讀取 <code>config.js</code> 的內容，也不會連線或修改 Supabase 資料。</p><p><strong>預期版本：</strong>v0.9.8.4｜正式標題：一張照片，為什麼讓我在意？</p><div id="results" aria-live="polite">準備檢查…</div><p id="summary" role="status"></p><button id="again" type="button">重新檢查（略過快取）</button><p><small>如果有任何失敗，請將完整純網站部署包上傳到 GitHub Pages 正在發布的資料夾／分支，包含 index.html、styles.css、src 與 assets。請勿上傳或替換含私密金鑰的 config.js。</small></p></main>
+</style></head><body><main><h1>網站版本與檔案完整性檢查</h1><p>本頁只讀取公開網站程式檔，不會讀取 <code>config.js</code> 的內容，也不會連線或修改 Supabase 資料。</p><p><strong>預期版本：</strong>v0.9.8.5｜正式標題：一張照片，為什麼讓我在意？</p><div id="results" aria-live="polite">準備檢查…</div><p id="summary" role="status"></p><button id="again" type="button">重新檢查（略過快取）</button><p><small>如果有任何失敗，請將完整純網站部署包上傳到 GitHub Pages 正在發布的資料夾／分支，包含 index.html、styles.css、src 與 assets。請勿上傳或替換含私密金鑰的 config.js。</small></p></main>
 <script>
 const checks=[
- ['首頁','index.html',txt=>txt.includes('v0.9.8.4')&&txt.includes('0984-group-contrast')],
- ['主控程式','src/app.js',txt=>txt.includes('v0.9.8.4')&&txt.includes('create-session')&&txt.includes('清除舊場次資料，開始新場次')&&txt.includes('drawnGroupSet')],
+ ['首頁','index.html',txt=>txt.includes('v0.9.8.5')&&txt.includes('0985-ending-image')],
+ ['主控程式','src/app.js',txt=>txt.includes('v0.9.8.5')&&txt.includes('create-session')&&txt.includes('清除舊場次資料，開始新場次')&&txt.includes('drawnGroupSet')&&txt.includes('ending-final-1671.webp')],
  ['場次連線程式','src/adapter-supabase.js',txt=>txt.includes('lecture_host_reset_and_create')&&txt.includes("mode==='reset'")],
- ['講座資料與標題','src/content.js',txt=>txt.includes("version:'0.9.8.4'")&&txt.includes('一張照片，為什麼讓我在意？')&&txt.includes('groupNames')],
- ['樣式表','styles.css',txt=>txt.includes('v0.9.8.4')],
+ ['講座資料與標題','src/content.js',txt=>txt.includes("version:'0.9.8.5'")&&txt.includes('一張照片，為什麼讓我在意？')&&txt.includes('groupNames')],
+ ['樣式表','styles.css',txt=>txt.includes('v0.9.8.5')&&txt.includes('v0985-ending-art')],
+ ['Ending 高清圖片','assets/visual-097/ending-final-1671.webp',size=>size>250000,'binary'],
+ ['Ending 輕量圖片','assets/visual-097/ending-final-1280.webp',size=>size>100000,'binary'],
 ];
 async function inspect(){
  const holder=document.getElementById('results'),summary=document.getElementById('summary');holder.innerHTML='';summary.textContent='正在檢查…';
  const state=[];
- for(const [name,path,predicate] of checks){
+ for(const [name,path,predicate,kind] of checks){
   const row=document.createElement('div');row.className='item';
   const detail=document.createElement('div');detail.textContent=name;const sub=document.createElement('small');sub.textContent=path;detail.append(sub);
   const label=document.createElement('span');label.className='status waiting';label.textContent='檢查中';row.append(detail,label);holder.append(row);
   try{
    const url=new URL(path,location.href);url.searchParams.set('check',String(Date.now()));
    const res=await fetch(url.toString(),{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);
-   const text=await res.text(),ok=predicate(text);state.push(ok);label.className='status '+(ok?'pass':'fail');label.textContent=ok?'通過':'版本不符';
+   const data=kind==='binary'?(await res.blob()).size:await res.text(),ok=predicate(data);state.push(ok);label.className='status '+(ok?'pass':'fail');label.textContent=ok?'通過':'版本不符';
   }catch(e){state.push(false);label.className='status fail';label.textContent='無法讀取';sub.textContent=path+' · '+String(e.message||e)}
  }
- summary.textContent=state.every(Boolean)?'全部通過：首頁與主要程式是 v0.9.8.4。':'有檔案缺失或版本不一致：請完整更新網站檔案，再重新檢查。';
+ summary.textContent=state.every(Boolean)?'7 項全部通過：主要程式與 Ending 圖片均為 v0.9.8.5。':'有檔案缺失或版本不一致：請完整更新網站檔案，再重新檢查。';
 }
 document.getElementById('again').onclick=inspect;inspect();
 </script></body></html>

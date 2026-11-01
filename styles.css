@@ -1310,3 +1310,28 @@ html, body, button, input, select, textarea, option {
 /* 八個正式組名在 1366 / 1920 投影與手機上均完整呈現。 */
 .v097-ch03-card-back small{font-size:clamp(13px,1.16vw,20px);font-weight:800;white-space:nowrap}
 @media(max-width:720px){.v097-ch03-card-back small{font-size:13px}}
+
+
+/* v0.9.8.5 | 06-04 Ending: 原圖全幅呈現，不另疊標題或字幕。 */
+/* 原圖 1671×941；保留完整文字，不以 cover 裁切。 */
+.stage-clean.v0985-ending-stage{background:#101a26!important}
+.stage-clean.v0985-ending-stage>.topbar,
+.stage-clean.v0985-ending-stage>.footer{display:none!important}
+.stage-clean.v0985-ending-stage>.viewport.unified-stage.ch06-viewport{
+  flex:1 1 auto;display:block;padding:0!important;margin:0!important;min-height:0;overflow:hidden
+}
+.stage-clean.v0985-ending-stage .viewport>.story{display:none!important}
+.stage-clean.v0985-ending-stage .viewport>.display{
+  position:relative;display:block;width:100%;height:100%;max-height:100%;min-height:0;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  background:#101a26!important;border:0!important;border-radius:0!important;
+  box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important
+}
+.stage-clean.v0985-ending-stage .viewport>.display>.v0985-ending-art{
+  display:block!important;width:100%;height:100%;max-width:none;min-height:0;
+  border:0!important;border-radius:0!important;background:#101a26!important;box-shadow:none!important
+}
+.v0985-ending-art::before,.v0985-ending-art::after{display:none!important}
+.v0985-ending-picture{display:block;width:100%;height:100%;margin:0;padding:0}
+.v0985-ending-image{display:block;width:100%;height:100%;max-width:none;object-fit:contain;object-position:center;image-rendering:auto}
+/* B 主控及 C 聽眾端完全不使用這組投影樣式。 */
