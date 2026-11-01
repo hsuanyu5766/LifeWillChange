@@ -1,5 +1,7 @@
 /* 講座內容資料：後續素材更新只須替換畫面資訊，不需動活動引擎。 */
 (function () {
+  // 組別名稱只更換顯示字串；資料庫 group_no 仍維持 1～8。
+  const groupNames = Object.freeze(['品德組','國際組','資訊組','生命組','性平組','人權組','科技組','防災組']);
   const chapters = [
     { id:'ch1', name:'看見照片', sub:'直覺觀察與第一次投票', minutes:5, core:'從一般人的身分出發' },
     { id:'ch2', name:'如果我是老師？', sub:'身分假設與第二次投票', minutes:5, core:'教師形象與社會期待' },
@@ -79,6 +81,6 @@
     's06-questions','s06-silence','s06-ending','s06-curtain'
   ];
   const presentationScenes=presentationIds.map(id=>scenes.find(s=>s.id===id));
-  const spec = Object.freeze({id:'photo-lecture',title:'一張照片，為什麼讓我在意？',version:'0.9.8.3',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8});
+  const spec = Object.freeze({id:'photo-lecture',title:'一張照片，為什麼讓我在意？',version:'0.9.8.4',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8,groupNames});
   window.LectureContent = spec;
 })();
