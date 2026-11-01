@@ -1290,3 +1290,7 @@ html, body, button, input, select, textarea, option {
 .v097-s12-stage .intro-card h2{max-width:100%;overflow-wrap:normal;text-wrap:balance;letter-spacing:.035em;font-size:clamp(31px,4vw,73px)}
 .v097-s5-stage .ch06-curtain-main h2,.v097-s6-stage .ch06-curtain-main h2{max-width:100%;text-wrap:balance;letter-spacing:.025em;font-size:clamp(27px,3.55vw,66px)}
 @media (max-width:850px){.v097-s12-stage .intro-card h2{font-size:clamp(26px,3.3vw,46px)}.v097-s6-stage .ch06-curtain-main h2{font-size:clamp(25px,3.4vw,44px)}}
+
+/* v0.9.8.3 — visible deployment integrity without changing the presentation layout. */
+.build-indicator{font-size:12px!important;color:#6d8596!important;line-height:1.5;margin:.6em 0!important}
+.build-indicator a{color:#2c6c9b!important;text-decoration:underline;text-underline-offset:3px}
