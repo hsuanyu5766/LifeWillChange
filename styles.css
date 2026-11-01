@@ -1294,3 +1294,19 @@ html, body, button, input, select, textarea, option {
 /* v0.9.8.3 — visible deployment integrity without changing the presentation layout. */
 .build-indicator{font-size:12px!important;color:#6d8596!important;line-height:1.5;margin:.6em 0!important}
 .build-indicator a{color:#2c6c9b!important;text-decoration:underline;text-underline-offset:3px}
+
+/* v0.9.8.4｜拉鋸條強化紅／綠辨識，不動 DOM、投票資料與動畫時序。 */
+.v097-s5-stage .ch05-rail .tug-arena{background:#10283a;border:2px solid rgba(244,237,215,.76);box-shadow:0 7px 22px rgba(0,0,0,.36),inset 0 0 0 1px rgba(255,255,255,.15)}
+.v097-s5-stage .ch05-rail .tug-left{background:linear-gradient(90deg,#087943 0%,#16b96e 70%,#27db83 100%)}
+.v097-s5-stage .ch05-rail .tug-right{background:linear-gradient(90deg,#fc6370 0%,#e53b52 48%,#ad173a 100%)}
+.v097-s5-stage .ch05-rail .tug-node{background:linear-gradient(90deg,#18d681 0%,#18d681 49%,#e8435b 51%,#e8435b 100%);border:4px solid #fff4d9;box-shadow:0 4px 16px rgba(0,0,0,.68),0 0 0 1px rgba(0,0,0,.3)}
+.v097-s5-stage .ch05-rail-labels span{color:#5af2aa}
+.v097-s5-stage .ch05-rail-labels>div:last-child span{color:#ff8997}
+.v097-s5-stage .ch05-live .v095-live-prompt{border-color:rgba(75,236,159,.66)}
+.v097-s5-stage .ch05-live .v095-live-prompt:nth-child(2){border-color:rgba(255,121,139,.68)}
+.tug-choice.left{background:linear-gradient(145deg,#087b4d,#13a968);border-color:#27d68d}
+.tug-choice.right{background:linear-gradient(145deg,#d5334c,#a91c37);border-color:#f77c89}
+.tug-choice.chosen{border-color:#ffe1a2;box-shadow:0 0 0 3px rgba(255,225,162,.58),0 10px 23px rgba(0,0,0,.22)}
+/* 八個正式組名在 1366 / 1920 投影與手機上均完整呈現。 */
+.v097-ch03-card-back small{font-size:clamp(13px,1.16vw,20px);font-weight:800;white-space:nowrap}
+@media(max-width:720px){.v097-ch03-card-back small{font-size:13px}}
