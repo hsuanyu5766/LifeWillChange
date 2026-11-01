@@ -143,7 +143,7 @@
    clearToast();render()
  }catch(e){if(remote&&/stale revision/i.test(e.message)){await Adapter.refresh(true);toast('講座狀態已更新，請再操作一次')}else toast(e.message||'操作失敗')}}
  function nav(delta){const next=playNeighbors(state.currentSceneId,delta);if(next){if(delta>0&&state.currentSceneId==='s01-photo'&&!PhotoFlow.info(state).readyForResults){toast('請先完成共用畫面的兩輪投票，再進入統計比較');return}if(next.ch==='ch6'&&state.activeRunId){toast('請先結束目前開放的作答，再進入第六環節');return}commit({type:'NAVIGATE',sceneId:next.id})}}
- function roleLink(nextView){const u=new URL(location.href);u.searchParams.set('view',nextView);if(remote&&Adapter.sessionId)u.searchParams.set('session',Adapter.sessionId);u.hash='';return u.href}
+ function roleLink(nextView){const u=new URL(location.href);u.searchParams.set('view',nextView);u.searchParams.set('build','v0982');if(remote&&Adapter.sessionId)u.searchParams.set('session',Adapter.sessionId);u.hash='';return u.href}
  function audienceLink(){return roleLink('audience')}
  function stageLink(token){const u=new URL(roleLink('stage'));const key=token||(remote?Adapter.stageToken:null);if(remote){if(!key)throw Error('尚未取得投影授權，請稍後重試');u.hash=new URLSearchParams({stage:key}).toString()}return u.href}
  function controlLink(){return roleLink('control')}
@@ -214,16 +214,16 @@
  function configErrorView(){
    const cfg=window.LectureConfig||{};
    const missing=(!cfg.supabaseUrl||!cfg.supabasePublishableKey);
-   return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">這張照片，你怎麼看？｜連線檢查</div></header><main><div class="mobile-activity"><h1>尚未啟用 Supabase 主控</h1><p class="caution">${missing?'config.js 的專案網址及 Publishable Key 必須都填寫完整。':'偵測到 Supabase 設定，但無法載入 Supabase SDK。請確認網路是否封鎖 jsDelivr CDN，並檢查瀏覽器開發者工具的 Network／Console。'}</p><p>請使用完整版 <strong>index.html</strong>，不要使用 v0.4 單檔示範頁。修正後重新載入。</p></div></main></div></div>`;
+   return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">一張照片，為什麼讓我在意？｜連線檢查</div></header><main><div class="mobile-activity"><h1>尚未啟用 Supabase 主控</h1><p class="caution">${missing?'config.js 的專案網址及 Publishable Key 必須都填寫完整。':'偵測到 Supabase 設定，但無法載入 Supabase SDK。請確認網路是否封鎖 jsDelivr CDN，並檢查瀏覽器開發者工具的 Network／Console。'}</p><p>請使用完整版 <strong>index.html</strong>，不要使用 v0.4 單檔示範頁。修正後重新載入。</p></div></main></div></div>`;
  }
- function groupJoinView(){return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">這張照片，你怎麼看？</div><small>加入互動講座</small></header><main class="join-group"><div class="eyebrow">加入場次 · 先選擇組別</div><h1>你是哪一組？</h1><p>請選擇老師現場分配的組別。抽取角色情境時，同組所有聽眾都會看到同一張卡。</p><form id="join-group-form"><label for="group-no">我的討論組別</label><select id="group-no" name="group" required><option value="">請選擇組別</option>${Array.from({length:8},(_,i)=>`<option value="${i+1}">第 ${i+1} 組</option>`).join('')}</select><button class="btn primary submit" type="submit">確認組別並加入</button></form><p class="muted">確認後不可自行換組；若選錯，請向主持人反映。</p>${ui.toast?`<p class="caution transient-notice">${htmlEsc(ui.toast)}</p>`:''}</main></div></div>`}
+ function groupJoinView(){return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">一張照片，為什麼讓我在意？</div><small>加入互動講座</small></header><main class="join-group"><div class="eyebrow">加入場次 · 先選擇組別</div><h1>你是哪一組？</h1><p>請選擇老師現場分配的組別。抽取角色情境時，同組所有聽眾都會看到同一張卡。</p><form id="join-group-form"><label for="group-no">我的討論組別</label><select id="group-no" name="group" required><option value="">請選擇組別</option>${Array.from({length:8},(_,i)=>`<option value="${i+1}">第 ${i+1} 組</option>`).join('')}</select><button class="btn primary submit" type="submit">確認組別並加入</button></form><p class="muted">確認後不可自行換組；若選錯，請向主持人反映。</p>${ui.toast?`<p class="caution transient-notice">${htmlEsc(ui.toast)}</p>`:''}</main></div></div>`}
  function remoteWaitingView(){
-   if(stageOnly)return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">這張照片，你怎麼看？｜純投影端</div></header><main><div class="locked"><div class="lock-icon">▣</div><h1>正在連接投影</h1><p>${htmlEsc(Adapter.status.error||'正在驗證專屬投影網址，無須輸入主持人帳號密碼。')}</p><button class="btn" data-action="retry">重新連線</button></div></main></div></div>`;
-   if(audience)return Adapter.status.needsGroup?groupJoinView():`<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">這張照片，你怎麼看？</div></header><main><div class="locked"><div class="lock-icon">◌</div><h1>正在加入講座</h1><p>${htmlEsc(Adapter.status.error||'正在確認本場講座的參與資格，請保持頁面開啟。')}</p><button class="btn" data-action="retry">重新連線</button></div></main></div></div>`;
-   return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">主持人主控｜這張照片，你怎麼看？</div></header><main><div class="mobile-activity"><h1>${Adapter.status.authenticated?'講座場次選擇':'主控驗證'}</h1><p>${Adapter.status.authenticated?'已登入主持人帳號，請選擇要操作的講座。':'請使用已獲授權的主持人帳號登入，在這裡控制全場畫面與回覆。'}</p>
+   if(stageOnly)return `<div class="mobile-shell stage-connect-screen"><div class="stage-connect-card"><div class="eyebrow">LECTURE · A 投影端</div><div class="stage-connect-icon">▣</div><h1>${Adapter.status.error?'投影連線未成功':'正在連接投影'}</h1><p class="stage-connect-message">${htmlEsc(Adapter.status.error||'正在驗證專屬投影連結。投影端不需要主持人密碼。')}</p>${Adapter.status.error?`<p class="stage-connect-tip">若從 LINE 開啟，請在 LINE 的選單中改用 Safari／Chrome 開啟原始完整連結（包含 #stage= 後面的內容）。也請確認手機能連上 Supabase。</p>`:''}<div class="stage-connect-actions"><button class="btn primary" data-action="retry">重新嘗試連線</button><button class="btn" data-action="copy-current-link">複製完整投影網址</button></div><small>發生錯誤時，請先不要重新建立場次或清除資料。</small></div></div>`;
+   if(audience)return Adapter.status.needsGroup?groupJoinView():`<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">一張照片，為什麼讓我在意？</div></header><main><div class="locked"><div class="lock-icon">◌</div><h1>正在加入講座</h1><p>${htmlEsc(Adapter.status.error||'正在確認本場講座的參與資格，請保持頁面開啟。')}</p><button class="btn" data-action="retry">重新連線</button></div></main></div></div>`;
+   return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">主持人主控｜一張照片，為什麼讓我在意？</div></header><main><div class="mobile-activity"><h1>${Adapter.status.authenticated?'講座場次選擇':'主控驗證'}</h1><p>${Adapter.status.authenticated?'已登入主持人帳號，請選擇要操作的講座。':'請使用已獲授權的主持人帳號登入，在這裡控制全場畫面與回覆。'}</p>
    ${!Adapter.status.authenticated?`<form id="host-login-form"><label>Email</label><input name="email" type="email" required autocomplete="username"><label>密碼</label><input name="password" type="password" required autocomplete="current-password"><button class="btn primary submit" type="submit">登入主控</button></form>`:
-   Adapter.status.awaitingChoice?`<div class="session-choice"><div class="session-choice-card"><div class="eyebrow">偵測到上次使用的講座</div><h2>要繼續既有場次，還是建立新場次？</h2><p class="muted">請手動選擇，系統不會自動跳轉到現有活動。</p><div class="session-choice-actions"><button class="btn primary" type="button" data-action="resume-session" ${ui.entryBusy?'disabled':''}>繼續既有活動</button><button class="btn" type="button" data-action="create-session" ${ui.entryBusy?'disabled':''}>建立新場次（保留舊資料）</button></div><p class="muted">新場次不會刪除過往場次、回覆或角色卡；請保留舊場次網址。新場次的投影連結與聽眾 QR Code 需重新提供。</p></div></div>`:
-   `<button class="btn primary submit" data-action="create-session" ${ui.entryBusy?'disabled':''}>建立一場新的講座</button>`}
+   Adapter.status.awaitingChoice?`<div class="session-choice"><div class="session-choice-card"><div class="eyebrow">偵測到上次使用的講座</div><h2>繼續原場次，或清空後重新開始？</h2><p class="muted">清空重開會刪除這位主持人過去的講座場次及其參與者、投票、角色抽取紀錄；不可復原。請先備份重要資料。</p><div class="session-choice-actions"><button class="btn" type="button" data-action="resume-session" ${ui.entryBusy?'disabled':''}>繼續既有活動</button><button class="btn primary" type="button" data-action="create-session" ${ui.entryBusy?'disabled':''}>清空舊資料並開始新場次</button><button class="btn ghost" type="button" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>建立新場次（保留歷史）</button></div><p class="muted">新場次會從零開始，並產生新的 A 投影連結與 C 聽眾 QR Code；舊投影與聽眾連結會失效（清空模式）。</p></div></div>`:
+   `<div class="session-choice-actions"><button class="btn primary submit" data-action="create-session" ${ui.entryBusy?'disabled':''}>清空舊資料並開始新場次</button><button class="btn ghost" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>保留歷史另開場次</button></div>`}
    ${Adapter.status.authenticated?`<p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
    ${Adapter.status.error?`<p class="caution">${htmlEsc(Adapter.status.error)}</p>`:''}${ui.toast?`<p class="caution transient-notice" role="alert">${htmlEsc(ui.toast)}</p>`:''}</div></main></div></div>`;
  }
@@ -231,7 +231,7 @@
   const scene=currentScene(),chapter=currChapter(),index=playIndex(scene.id),run=relevantRun(scene),activeRun=active();
   return `<div class="shell stage stage-clean ${scene.ch==='ch6'?'ch06-stage-shell':''} ${['s01-welcome','s01-photo','s02-results','s02-reasons'].includes(scene.id)?'v097-s12-stage v097-s12-'+scene.id:''} ${['s03-cards','s03-discuss','s03-share'].includes(scene.id)?'v097-s3-stage v097-s3-'+scene.id:''} ${['s04-intro','s04-compare','s04-action','s04-boundary'].includes(scene.id)?'v097-s4-stage v097-s4-'+scene.id:''} ${['s05-vote','s05-live','s05-integrate'].includes(scene.id)?'v097-s5-stage v097-s5-'+scene.id:''} ${['s06-questions','s06-silence','s06-ending','s06-curtain'].includes(scene.id)?'v097-s6-stage v097-s6-'+scene.id:''}">
     ${!remote?'<div class="demo-banner">本機演示 · 非跨裝置連線</div>':''}
-    <header class="topbar"><div class="brand">這張照片，你怎麼看？<small>第 ${spec.chapters.indexOf(chapter)+1} 環節｜${htmlEsc(chapter.name)}</small></div><div class="stage-progress">${index<0?'舊版':String(index+1).padStart(2,'0')} / ${playlist.length}</div></header>
+    <header class="topbar"><div class="brand">一張照片，為什麼讓我在意？<small>第 ${spec.chapters.indexOf(chapter)+1} 環節｜${htmlEsc(chapter.name)}</small></div><div class="stage-progress">${index<0?'舊版':String(index+1).padStart(2,'0')} / ${playlist.length}</div></header>
     <main class="viewport unified-stage ${(['rolecards','scenario-intro','scenario-discuss','scenario-share','scenario-turn','discussion-bridge'].includes(scene.kind)?'scenario-stage-viewport ch03-viewport':['ch04-intro','ch04-compare','ch04-action','ch04-results','ch04-boundary'].includes(scene.kind)?'ch04-viewport':scene.kind.startsWith('ch05-')?'ch05-viewport':scene.kind.startsWith('ch06-')?'ch06-viewport':'')}"><section class="story">
       <div class="step-label">第 ${spec.chapters.indexOf(chapter)+1} 環節｜${htmlEsc(chapter.name)} <span>${chapter.minutes} 分鐘</span></div>
       <h1>${htmlEsc(scene.title)}</h1><div class="intro">${htmlEsc(scene.text)}</div>
@@ -245,7 +245,7 @@
   const scene=currentScene(),chapter=currChapter(),open=active(),run=relevantRun(scene),a=scene.activityId?spec.activities[scene.activityId]:null;
   if(!ui.reviewRunId&&state.runs.length)ui.reviewRunId=state.runs[state.runs.length-1].id;
   return `<div class="control-shell">
-   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8</div><h1>這張照片，你怎麼看？</h1><p>六環節・情境導演式主控・即時回饋管理</p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
+   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.2</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
    ${!remote?'<div class="demo-banner">本機示範，須部署 Supabase 才能跨裝置操作</div>':''}
    <nav class="director-chapters" aria-label="六環節目前進度">${spec.chapters.map((c,i)=>`<div class="director-chapter ${chapter.id===c.id?'active':''}"><span>0${i+1}</span><strong>${htmlEsc(c.name)}</strong></div>`).join('')}</nav>
    <div class="control-grid">
@@ -258,7 +258,7 @@
       ['scenario-discuss','scenario-share'].includes(scene.kind)?chapter3Controls(scene):scene.kind==='ch04-compare'?chapter4Controls(scene):['ch05-reflect','ch05-live'].includes(scene.kind)?chapter5Controls(scene):scene.kind.startsWith('ch06-')?chapter6Controls(scene):scene.steps.length?`<div class="scenario-control-block"><strong>同頁逐步揭露 ${Number(state.reveals?.[scene.id]||0)}／${scene.steps.length}</strong><div class="rowbuttons">${controlBtn('reveal-next','揭露下一項','primary',Number(state.reveals?.[scene.id]||0)>=scene.steps.length?'disabled':'')}${controlBtn('reveal-reset','重置引導','ghost')}</div><p class="muted">${htmlEsc(scene.steps[Math.min(scene.steps.length-1,Number(state.reveals?.[scene.id]||0))])}</p></div>`:''}
       <details class="scene-picker"><summary>跳到指定畫面</summary><div class="jump-list">${spec.chapters.map((c,i)=>`<div class="chapter-label">${i+1}｜${htmlEsc(c.name)}</div>${playlist.filter(x=>x.ch===c.id).map(s=>`<button class="jump ${scene.id===s.id?'active':''}" data-action="jump" data-id="${s.id}">${htmlEsc(s.title)}</button>`).join('')}`).join('')}</div></details>
       <h2>投影與加入</h2><p class="muted">A 裝置使用專屬唯讀連結，不須登入，以 F11 全螢幕播放；B 裝置保留此管理介面。請勿公開分享投影連結。</p>
-      <div class="rowbuttons">${controlBtn('open-stage','開啟免登入投影','primary')}${controlBtn('copy-stage','複製 A 裝置網址','')}${controlBtn('copy-audience','複製聽眾網址','')}</div>
+      <div class="rowbuttons">${controlBtn('open-stage','開啟免登入投影','primary')}${controlBtn('copy-stage','複製 A 裝置網址','')}${remote?controlBtn('test-stage','測試 A 投影連線','ghost'):''}${controlBtn('copy-audience','複製聽眾網址','')}</div>
       ${remote?`<div class="rowbuttons">${controlBtn('toggle-join',state.joinOpen?'停止新裝置加入':'開放新裝置加入','')}${controlBtn('session-chooser','場次選擇','ghost')}${controlBtn('logout','登出主控','ghost')}</div>`:''}
     </section>
     <section class="control-panel"><h2>活動與結果</h2>
@@ -458,7 +458,7 @@
    }
    if(scene.kind==='ch06-silence')return `<div class="ch06-scene ch06-silence" data-scene="${scene.id}"><div class="ch06-topline">QUIET MOMENT · 靜思</div><h2>給自己十秒鐘</h2><p>不用回答別人，只要誠實面對自己。</p><strong class="ch06-clock-value">00:${String(remainingCh06Seconds()).padStart(2,'0')}</strong><div class="ch06-time-track"><i class="ch06-time-fill" style="width:${remainingCh06Seconds()*10}%"></i></div><div class="ch06-clock-state">等待主持人開始</div></div>`;
    if(scene.kind==='ch06-ending')return `<div class="ch06-scene ch06-ending" data-scene="${scene.id}"><div class="ch06-ending-label">LOOK INWARD · UNDERSTAND OTHERS · BECOME YOURSELF</div><svg class="ch06-stairs" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">${['M105 835 H535 V652','M535 652 H960 V417','M960 417 H1515 V232'].map((d,i)=>`<g class="ch06-stair-segment ${phase>=i+1?'shown':''}" data-ch06-step="${i+1}"><path class="ch06-stair-glow" d="${d}"/><path class="ch06-stair-line" d="${d}"/></g>`).join('')}</svg><div class="ch06-stair-title step1 ${phase>=1?'shown':''}" data-ch06-step="1"><span>◉　第一階</span><h2>看見自己</h2><p>覺察自己的感受與期待</p></div><div class="ch06-stair-title step2 ${phase>=2?'shown':''}" data-ch06-step="2"><span>♧　第二階</span><h2>理解他人</h2><p>看見不同立場的理由</p></div><div class="ch06-stair-title step3 ${phase>=3?'shown':''}" data-ch06-step="3"><span>✦　第三階</span><h2>成為自己</h2><p>實踐自己相信的價值</p></div><div class="ch06-final-whisper ${phase===3?'shown':''}">讓選擇，成為生命的實踐。</div></div>`;
-   if(scene.kind==='ch06-curtain')return `<div class="ch06-scene ch06-curtain" data-scene="${scene.id}"><div class="ch06-curtain-kicker">THE END · LIFE EDUCATION</div><div class="ch06-curtain-main"><span class="ch06-curtain-mark">✦</span><h2>這張照片，你怎麼看？</h2><p>願我們看見角色，也不忘看見人。</p><i></i><small>感謝你的參與</small></div></div>`;
+   if(scene.kind==='ch06-curtain')return `<div class="ch06-scene ch06-curtain" data-scene="${scene.id}"><div class="ch06-curtain-kicker">THE END · LIFE EDUCATION</div><div class="ch06-curtain-main"><span class="ch06-curtain-mark">✦</span><h2>一張照片，為什麼讓我在意？</h2><p>願我們看見角色，也不忘看見人。</p><i></i><small>感謝你的參與</small></div></div>`;
    return '';
  }
  function visual(scene,run){
@@ -467,7 +467,7 @@
   if(scene.kind.startsWith('ch04-'))return chapter4StageVisual(scene,run);
   if(scene.kind.startsWith('ch05-'))return chapter5StageVisual(scene,run);
   if(scene.kind.startsWith('ch06-'))return chapter6StageVisual(scene);
-  if(scene.kind==='welcome')return `<div class="intro-card"><div class="eyebrow">互動式生命教育講座</div><h2>這張照片，<br>你怎麼看？</h2><p>講座、活動與即時回饋都在同一個舞台。</p><div id="stage-qr" class="welcome-qr"></div><p class="qr-caption">掃描 QR Code 加入講座</p></div>`;
+  if(scene.kind==='welcome')return `<div class="intro-card"><div class="eyebrow">互動式生命教育講座</div><h2>一張照片，<br>為什麼讓我在意？</h2><p>講座、活動與即時回饋都在同一個舞台。</p><div id="stage-qr" class="welcome-qr"></div><p class="qr-caption">掃描 QR Code 加入講座</p></div>`;
   if(scene.kind==='photo'||scene.kind==='identity'){
     const shared=scene.id==='s01-photo',phase=Number(state.reveals?.[scene.id]||0),isTeacher=shared?phase>=2:scene.kind==='identity';
     const question=shared?phase===1?spec.activities['a-photo-first'].question:phase===3?spec.activities['a-photo-teacher'].question:phase===2?'現在，只加入一個條件：假設你是一名國小教師。':'先看看這兩張照片。':phase<2?'照片沒有改變，現在多了一個條件。':spec.activities['a-photo-teacher'].question;
@@ -555,7 +555,7 @@
   const gn=myGroup(),card=myRoleCard();return `<div class="audience-role-card"><div class="eyebrow">第 ${gn} 組｜角色情境</div>${card?`<h2>${htmlEsc(card.badge||card.role)}｜${htmlEsc(card.title)}</h2>${roleCardFigure(card,true)}<p class="caption">點按圖片可放大閱讀。同組其他成員會看到同一張情境圖片。</p><p><strong>角色身分：</strong>${htmlEsc(card.role)}</p><p><strong>重視：</strong>${htmlEsc(card.focus||card.persona||'')}</p><p><strong>一句心聲：</strong>${htmlEsc(card.quote||card.thought||'')}</p><p class="muted">請先理解此角色的想法，接著從相反立場提出具體質疑與理由。</p>`:state.groupDrawOpen?`<h2>準備抽取角色情境</h2><p>每組只需抽一次，同組成員會同步看到結果。</p><button class="btn primary" data-action="draw-card" ${ui.drawBusy?'disabled':''}>${ui.drawBusy?'抽取中…':'抽取角色情境'}</button><p class="muted">抽到後會直接顯示圖片卡，兼顧清楚閱讀與載入速度。</p>`:'<p>請仔細聆聽，等待主持人開放角色情境抽取。</p>'}</div>`}
  function audienceView(){const run=active(),scene=currentScene(),a=run?spec.activities[run.activityId]:null,prev=run?(remote?state.myAnswers?.[run.id]:state.answers[run.id]?.[participantId]):null;
   if(!remote&&!localGroup)return groupJoinView();
-  return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">這張照片，你怎麼看？</div><small>第 ${myGroup()} 組 · 第 ${spec.chapters.indexOf(currChapter())+1} 環節</small></header><main><div class="demo-ribbon">${remote?(Adapter.status.connected?'即時連線已建立':'斷線備援同步 · 仍可作答'):'本機同步架構原型 · 非現場連線版'}</div>
+  return `<div class="mobile-shell"><div class="phone"><header><div class="mobile-brand">一張照片，為什麼讓我在意？</div><small>第 ${myGroup()} 組 · 第 ${spec.chapters.indexOf(currChapter())+1} 環節</small></header><main><div class="demo-ribbon">${remote?(Adapter.status.connected?'即時連線已建立':'斷線備援同步 · 仍可作答'):'本機同步架構原型 · 非現場連線版'}</div>
    ${roleCardPanel()}
    ${(!run||scene.ch==='ch6')?`<div class="locked"><div class="lock-icon">♙</div><h1>請仔細聆聽</h1><p>目前尚未開放活動。講者開放後，這裡會自動顯示題目。</p><span>不需要重新掃碼</span></div>`:
    `<div class="mobile-activity"><span class="tag">${prev?'已作答 · 可更新':'活動已開放'}</span><h1>${htmlEsc(a.label)}</h1><p>${htmlEsc(a.question)}</p>${a.kind==='tug'?audienceForm(a,prev):audienceForm(a,prev)}</div>`}
@@ -630,6 +630,7 @@
      }catch(err){if(remote&&/stale revision/i.test(err.message))await Adapter.refresh(true);toast(err.message||'核准失敗')}})()}
    else if(action==='open-stage'){const tab=window.open('about:blank','_blank');(async()=>{try{const token=remote?await Adapter.getStageToken():null;const url=stageLink(token);if(tab){tab.opener=null;tab.location.replace(url)}else toast('瀏覽器封鎖新視窗，請使用「複製 A 裝置網址」')}catch(err){tab?.close();toast(err.message||'投影連結取得失敗')}})()}
    else if(action==='copy-stage'){(async()=>{try{const token=remote?await Adapter.getStageToken():null;const url=stageLink(token);await navigator.clipboard.writeText(url);toast('A 裝置投影連結已複製')}catch(err){toast('無法複製：'+(err.message||'請改用開啟純投影'))}})()}
+   else if(action==='test-stage'&&remote){Adapter.testStageConnection().then(()=>toast('投影端匿名快照測試成功；若 LINE 仍連不上，請改用 Safari／Chrome 開啟',5000)).catch(err=>toast('投影端測試失敗：'+(err.message||'請確認 Supabase 連線')))}
    else if(action==='copy-audience'){copyUrl(audienceLink(),'聽眾網址')}
    else if(action==='reset'&&!remote){if(confirm('確定清空本機所有示範回應並重置講座？'))commit({type:'RESET'})}
    else if(action==='toggle-join'&&remote){commit({type:'SET_JOIN_OPEN',open:!state.joinOpen})}
@@ -638,15 +639,20 @@
      if(ui.entryBusy)return;ui.entryBusy=true;render();
      Adapter.resumeSession().catch(err=>toast(err.message)).finally(()=>{ui.entryBusy=false;render()});
    }
-   else if(action==='create-session'&&remote){
+   else if((action==='create-session'||action==='create-session-preserve')&&remote){
      if(ui.entryBusy)return;
-     if(!confirm('確定建立一個新講座場次？\n\n已驗收的舊場次、聽眾回覆及抽卡資料都會保留。舊場次若仍開放，仍須另行結束。\n\n新場次將產生新的投影連結與聽眾 QR Code。'))return;
+     const destructive=action==='create-session';
+     if(destructive){
+       if(!confirm('警告：確定清除這位主持人過去的所有講座場次、投票回覆、參與者與角色抽取資料，並建立一場全新的講座嗎？\n\n此動作不可復原；只有事先備份的資料才能找回。\n\n舊 A／C 連結會失效。'))return;
+       if(prompt('請輸入「清空」以確認刪除歷史場次與回覆：')!=='清空'){toast('已取消清空；沒有變更場次');return}
+     }else if(!confirm('確定保留所有歷史資料，另外建立全新場次？\n新場次有獨立的投票、抽卡及專屬連結。'))return;
      ui.entryBusy=true;render();
-     Adapter.createSession().catch(err=>toast(err.message)).finally(()=>{ui.entryBusy=false;render()});
+     Adapter.createSession(destructive?'reset':'preserve').catch(err=>toast(err.message)).finally(()=>{ui.entryBusy=false;render()});
    }
    else if(action==='session-chooser'&&remote){Adapter.showSessionChooser().catch(err=>toast(err.message))}
    else if(action==='logout'&&remote){Adapter.logout().catch(err=>toast(err.message))}
-   else if(action==='retry'&&remote){location.reload()}
+   else if(action==='retry'&&remote){(Adapter.retryConnection?.()||Promise.resolve()).catch(err=>toast(err.message||'重新連線失敗'))}
+   else if(action==='copy-current-link'&&stageOnly){navigator.clipboard?.writeText(location.href).then(()=>toast('完整投影連結已複製')).catch(()=>toast('無法自動複製，請改由瀏覽器分享選單複製'))}
    else if(action==='csv'){if(remote)toast('正式版 CSV 匯出尚未開放');else exportCSV()}
    else if(action==='copy'){navigator.clipboard?.writeText(audienceLink()).then(()=>toast('已複製參與網址')).catch(()=>toast('無法自動複製，請手動選取網址'))}
    else if(action==='fullscreen'){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>toast('全螢幕無法啟用，可改用 F11'))}

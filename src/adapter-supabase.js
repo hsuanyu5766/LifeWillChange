@@ -8,13 +8,15 @@
  const cfg=window.LectureConfig||{};
  if(!cfg.supabaseUrl||!cfg.supabasePublishableKey||!window.supabase?.createClient)return;
  const C=window.LectureCore;
- const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{
-   auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false},
-   realtime:{params:{eventsPerSecond:5}}
- });
  const params=new URLSearchParams(location.search);
  const audience=params.get('view')==='audience';
  const stageOnly=params.get('view')==='stage';
+ // 唯讀投影／聽眾不需要主持人的 Auth session；在 LINE WebView 避免讀取或刷新舊主持人登入資訊。
+ const needsHostAuth=!audience&&!stageOnly;
+ const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{
+   auth:{persistSession:needsHostAuth,autoRefreshToken:needsHostAuth,detectSessionInUrl:false},
+   realtime:{params:{eventsPerSecond:5}}
+ });
  const stageToken=stageOnly?new URLSearchParams(location.hash.slice(1)).get('stage'):null;
  const SESSION_KEY='photo-lecture-v05-host-session';
  let sessionId=params.get('session')||(!audience&&!stageOnly?localStorage.getItem(SESSION_KEY):null);
@@ -32,6 +34,22 @@
  function loadCredential(){try{return JSON.parse(localStorage.getItem(storageKey())||'null')}catch{return null}}
  function saveCredential(v){credential=v;localStorage.setItem(storageKey(),JSON.stringify(v))}
  const rpc=async(name,args={})=>{const {data,error}=await client.rpc(name,args);if(error)throw new Error(error.message);return data};
+ function isTransportError(e){return /load failed|failed to fetch|networkerror|network request failed|internet connection|fetch failed|timeout|timed out/i.test(String(e?.message||e||''))}
+ function describeStageError(e){
+   const msg=String(e?.message||e||'');
+   if(isTransportError(e))return '無法向 Supabase 取得資料（網路連線遭中斷或跨站請求失敗）。請用 Safari／Chrome 開啟完整投影網址，確認網路及 config.js 的 Supabase 專案網址。';
+   if(/invalid projection link|投影連結不完整|jwt|permission denied|not authorized|42501/i.test(msg))return '投影授權連結已失效或不完整，請回 B 主控重新複製這一場的 A 投影網址。';
+   if(/404|could not find the function|schema cache|pgrst202/i.test(msg))return 'Supabase 找不到投影所需的函式；請確認網站指向正確專案且 SQL 已完成部署。';
+   return msg||'投影連線失敗；請確認 Supabase 設定與網路。';
+ }
+ const retrySleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+ async function stageSnapshot(){
+   for(let i=0;i<3;i++){
+     try{return await rpc('lecture_stage_snapshot',{p_session:sessionId,p_token:stageToken})}
+     catch(e){if(!isTransportError(e)||i===2)throw e;await retrySleep(600*(i+1));}
+   }
+ }
+
  function clearTimers(){clearTimeout(pollTimer);clearTimeout(statsTimer);clearTimeout(statsSettleTimer);pollTimer=statsTimer=statsSettleTimer=null}
  function fallbackDelay(){const base=Math.max(7000,Math.min(30000,Number(cfg.maxFallbackPollMs)||9000));return base+Math.floor(Math.random()*3000)}
  function scheduleFallback(){clearTimeout(pollTimer);pollTimer=null;
@@ -53,7 +71,7 @@
      if(currentGeneration!==generation)return;
      acceptState(incoming,source);
      if(status.error)updateStatus({error:''});
-   }catch(e){if(currentGeneration===generation)updateStatus({error:e.message})}
+   }catch(e){if(currentGeneration===generation)updateStatus({error:stageOnly?describeStageError(e):e.message})}
    finally{
      busy=false;
      if(queued){const next=queuedSource;queued=false;queuedSource='queued';void refresh(true,next)}
@@ -112,7 +130,7 @@
      if(stageOnly){
        if(!sessionId||!stageToken)throw Error('投影連結不完整，請從 B 主控重新複製 A 裝置網址');
        // 驗證唯讀能力憑證，不呼叫 Supabase Auth 登入或建立聽眾身分。
-       let incoming=await rpc('lecture_stage_snapshot',{p_session:sessionId,p_token:stageToken});
+       let incoming=await stageSnapshot();
        stageChannel=incoming.projectionChannel;delete incoming.projectionChannel;
        if(!stageChannel)throw Error('投影通知頻道無效');
        acceptState(incoming,'boot');ready=true;updateStatus({ready:true,error:''});await setupChannels();
@@ -135,7 +153,7 @@
        // 先取得專屬唯讀連結，使用者按下複製時不必等待首次 RPC。
        void getStageToken().catch(e=>console.warn('投影連結預先取得失敗：',e.message));
      }
-   }catch(e){updateStatus({ready:false,error:e.message})}
+   }catch(e){updateStatus({ready:false,error:stageOnly?describeStageError(e):e.message})}
  }
  async function selectGroup(groupNo){
    if(!audience||!sessionId)throw Error('不是聽眾加入頁面');
@@ -165,6 +183,20 @@
    if(!projectionToken||rotate)projectionToken=await rpc('lecture_host_stage_link',{p_session:sessionId,p_rotate:rotate});
    return projectionToken;
  }
+ // 由 B 主控以匿名方式實測 A 的唯讀 RPC，不只是確認主持人自己可以取連結。
+ async function testStageConnection(){
+   if(audience||stageOnly||!status.authenticated||!sessionId)throw Error('只有主持人可以檢查投影連線');
+   const token=await getStageToken();
+   const anonClient=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{
+     auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}
+   });
+   let result;
+   try{result=await anonClient.rpc('lecture_stage_snapshot',{p_session:sessionId,p_token:token})}
+   catch(e){throw Error(describeStageError(e))}
+   if(result.error)throw Error(describeStageError(result.error));
+   if(!result.data?.projectionChannel)throw Error('投影 RPC 沒有回傳唯讀通知頻道，請檢查 SQL 及憑證');
+   return true;
+ }
  // 只有主持人明確點擊「繼續」後，才連線並讀取舊講座。
  async function resumeSession(){
    if(audience||stageOnly||!status.authenticated||!sessionId)throw Error('請先登入並選擇有效的講座場次');
@@ -185,14 +217,33 @@
    channels=[];publicOnline=false;statsOnline=false;
    updateStatus({ready:false,awaitingChoice:!!sessionId,connected:false,error:''});
  }
- async function createSession(){
-   // v0.9.8：只呼叫安全新場次 RPC；未升級 SQL 時拒絕建立，避免誤刪歷史資料。
-   const id=await rpc('lecture_host_create_safe',{p_title:'這張照片，你怎麼看？'});
-   sessionId=id;projectionToken=null;localStorage.setItem(SESSION_KEY,id);
+ async function createSession(mode='preserve'){
+   if(audience||stageOnly||!status.authenticated)throw Error('只有已登入主持人可以建立新場次');
+   if(!['preserve','reset'].includes(mode))throw Error('未知的新場次模式');
+   // 「清空」是獨立 RPC，必須先通過 B 主控二次確認；沒有升級 SQL 時會安全地失敗。
+   const id=mode==='reset'?
+     await rpc('lecture_host_reset_and_create',{p_title:'一張照片，為什麼讓我在意？',p_confirm:'DELETE_OLD_SESSIONS'}):
+     await rpc('lecture_host_create_safe',{p_title:'一張照片，為什麼讓我在意？'});
+   // 新場次與舊連線完全切開，避免延遲到達的舊快照在主控上出現。
+   ready=false;generation++;clearTimers();queued=false;
+   for(const ch of channels)await client.removeChannel(ch);
+   channels=[];publicOnline=false;statsOnline=false;busy=false;
+   sessionId=id;projectionToken=null;currentHash='';state=C.initial();
+   localStorage.setItem(SESSION_KEY,id);
    const u=new URL(location.href);u.searchParams.set('session',id);history.replaceState(null,'',u);
-   ready=true;status.sessionId=id;
-   await refresh(true,'create-session');updateStatus({ready:true,awaitingChoice:false,error:''});await setupChannels();
-   void getStageToken().catch(e=>console.warn('投影連結預先取得失敗：',e.message));return id;
+   updateStatus({sessionId:id,ready:false,awaitingChoice:false,connected:false,error:''});
+   try{
+     const fresh=await rpc('lecture_host_snapshot',{p_session:id});
+     acceptState(fresh,'create-session');ready=true;updateStatus({ready:true,error:''});
+     await setupChannels();
+     void getStageToken().catch(e=>console.warn('投影連結預先取得失敗：',e.message));
+   }catch(e){ready=false;updateStatus({ready:false,awaitingChoice:true,error:e.message});throw e}
+   return id;
+ }
+ async function retryConnection(){
+   if(ready){await refresh(true,'retry');return}
+   updateStatus({error:''});
+   await boot();
  }
  async function dispatch(action){
    if(audience||stageOnly)throw Error('投影及聽眾端沒有講座控制權限');
@@ -249,7 +300,7 @@
  if(typeof addEventListener==='function')
    addEventListener('online',()=>{if(ready)void refresh(true,'online')});
  window.LectureAdapter={type:'supabase',get:()=>state,status,client,dispatch,submit,login,logout,createSession,
-   listResponses,featureResponse,publishPair,scenarioControl,ch06Timer,ch06Prev,getStageToken,selectGroup,drawRoleCard,resumeSession,showSessionChooser,subscribe(fn){handlers.push(fn);return ()=>handlers=handlers.filter(h=>h!==fn)},
+   listResponses,featureResponse,publishPair,scenarioControl,ch06Timer,ch06Prev,getStageToken,testStageConnection,selectGroup,drawRoleCard,resumeSession,showSessionChooser,retryConnection,subscribe(fn){handlers.push(fn);return ()=>handlers=handlers.filter(h=>h!==fn)},
    refresh,get sessionId(){return sessionId},get stageToken(){return projectionToken},get participantId(){return credential?.participantId||null}};
  boot();
 })();
