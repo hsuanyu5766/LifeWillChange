@@ -61,7 +61,7 @@
 /* v0.6.4：加入網站底圖，透過半透明遮罩與毛玻璃卡片兼顧可讀性、清晰度與載入速度。 */
 :root{--bg-veil:rgba(247,244,238,.76);--panel-veil:rgba(255,252,247,.72);--panel-veil-strong:rgba(255,253,250,.84);--glass-line:rgba(255,255,255,.46);--glass-shadow:0 12px 34px rgba(27,49,72,.08)}
 html,body{min-height:100%}
-body{position:relative;background:#ebe7e1;background-image:url("assets/lecture-mountain-stage-v073-1600.webp");background-image:image-set(url("assets/lecture-mountain-mobile-v073-960.webp") 1x,url("assets/lecture-mountain-stage-v073-1600.webp") 2x);background-size:cover;background-position:26% center;background-repeat:no-repeat;background-attachment:fixed}
+body{position:relative;background:#ebe7e1;background-image:url("assets/lecture-panorama-v076-1920.webp");background-image:image-set(url("assets/lecture-panorama-mobile-v076-960.webp") 1x,url("assets/lecture-panorama-v076-1920.webp") 2x);background-size:cover;background-position:26% center;background-repeat:no-repeat;background-attachment:fixed}
 body::before{content:"";position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,rgba(248,245,241,.70),rgba(244,240,235,.82) 36%,rgba(240,236,231,.90) 100%)}
 #app{position:relative;z-index:1}
 .shell,.stage-clean,.control-shell,.mobile-shell{position:relative;background:transparent}
@@ -100,8 +100,8 @@ body::before{content:"";position:fixed;inset:0;z-index:0;background:linear-gradi
 @media(max-width:700px){.card-draw-stage .group-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tug-choice strong{font-size:15px}.tug-choice-actions{gap:10px}.tug-choice{min-height:150px}}
 
 /* 1600px 投影優先清晰度；小螢幕改用 960px 版本降低載入成本。 */
-body{background-image:url("assets/lecture-mountain-stage-v073-1600.webp")!important}
-@media(max-width:900px){body{background-image:url("assets/lecture-mountain-mobile-v073-960.webp")!important;background-position:34% center}}
+body{background-image:url("assets/lecture-panorama-v076-1920.webp")!important}
+@media(max-width:900px){body{background-image:url("assets/lecture-panorama-mobile-v076-960.webp")!important;background-position:34% center}}
 
 
 /* v0.7.1：更換為山景人物底圖，透過偏左定位盡量保留人物主體。 */
@@ -119,7 +119,7 @@ body{background-image:url("assets/lecture-mountain-stage-v073-1600.webp")!import
 /* v0.7.3：避免沿用舊底圖快取；16:9 將人物完整保留在左側，並調整遮罩可見度。 */
 body{
   background-color:#35475b;
-  background-image:url("assets/lecture-mountain-stage-v073-1600.webp") !important;
+  background-image:url("assets/lecture-panorama-v076-1920.webp") !important;
   background-size:cover;
   background-position:32% center;
   background-repeat:no-repeat;
@@ -138,7 +138,7 @@ body::before{
 .stage-clean .display{background:rgba(255,252,248,.86)}
 @media(max-width:900px){
   body{
-    background-image:url("assets/lecture-mountain-mobile-v073-960.webp") !important;
+    background-image:url("assets/lecture-panorama-mobile-v076-960.webp") !important;
     background-position:26% center;
     background-attachment:scroll;
   }
@@ -685,7 +685,7 @@ html, body, button, input, select, textarea, option {
    原圖：使用者指定的「底圖 (新).png」，不裁切或修改來源。
    ═══════════════════════════════════════════════════════════════ */
 .stage-clean.v097-s12-stage{
-  background:#0f2234 url("assets/visual-097/cinematic-film-bg.png") center center / cover no-repeat !important;
+  background:#0f2234 url("assets/visual-097/cinematic-film-bg.webp") center center / cover no-repeat !important;
   isolation:isolate;color:#f7ebd8;
 }
 .v097-s12-stage .topbar,.v097-s12-stage .footer{
@@ -803,7 +803,7 @@ html, body, button, input, select, textarea, option {
    v0.9.7 S2｜第三環節三幕：原始正式插畫、深藍全幅、動態數值
    僅作用於 A 投影 ch3 三幕，B/C 不動；不得提前公開抽卡身分。
    ═════════════════════════════════════════════════════════════════ */
-.stage-clean.v097-s3-stage{background:#0f2234 url("assets/visual-097/cinematic-film-bg.png") center / cover no-repeat!important;color:#f9ecdb;isolation:isolate}
+.stage-clean.v097-s3-stage{background:#0f2234 url("assets/visual-097/cinematic-film-bg.webp") center / cover no-repeat!important;color:#f9ecdb;isolation:isolate}
 .v097-s3-stage .topbar,.v097-s3-stage .footer{position:relative;background:rgba(10,24,38,.48)!important;border-color:rgba(233,205,159,.28)!important;box-shadow:none!important;backdrop-filter:blur(3px)}
 .v097-s3-stage .topbar{min-height:clamp(61px,8.5vh,88px);padding:clamp(8px,1.3vh,13px) clamp(20px,3vw,58px)}
 .v097-s3-stage .brand{color:#f8ebd5;font-size:clamp(16px,1.35vw,25px);letter-spacing:.06em}
@@ -879,7 +879,7 @@ html, body, button, input, select, textarea, option {
    v0.9.7 S3｜第四環節 A 投影：全幅底片、分歧與界線、同頁互動
    B 主控、C 聽眾，以及 SQL／活動控制不受影響
    ============================================================ */
-.stage-clean.v097-s4-stage{background:#102338 url("assets/visual-097/cinematic-film-bg.png") center center/cover no-repeat!important;color:#f6e8d6;isolation:isolate}
+.stage-clean.v097-s4-stage{background:#102338 url("assets/visual-097/cinematic-film-bg.webp") center center/cover no-repeat!important;color:#f6e8d6;isolation:isolate}
 .v097-s4-stage .topbar,.v097-s4-stage .footer{position:relative;background:rgba(9,24,39,.48)!important;border-color:rgba(230,202,150,.28)!important;box-shadow:none!important;backdrop-filter:blur(3px)}
 .v097-s4-stage .topbar{min-height:clamp(60px,8vh,85px);padding:clamp(8px,1.3vh,13px) clamp(20px,3vw,58px)}
 .v097-s4-stage .brand{color:#fff0d9;font-size:clamp(16px,1.35vw,25px);letter-spacing:.05em}
@@ -964,7 +964,7 @@ html, body, button, input, select, textarea, option {
  v0.9.7 S4：第五環節 A 投影版型。只作用於 s05-vote/live/integrate。
  不更動任何即時投票的 JS、活動 ID、RPC／SQL，也不會重建拉鋸 DOM。
  ============================================================ */
-.stage-clean.v097-s5-stage{background:#102338 url("assets/visual-097/cinematic-film-bg.png") center center/cover no-repeat!important;color:#f5e6d1;isolation:isolate}
+.stage-clean.v097-s5-stage{background:#102338 url("assets/visual-097/cinematic-film-bg.webp") center center/cover no-repeat!important;color:#f5e6d1;isolation:isolate}
 .v097-s5-stage .topbar,.v097-s5-stage .footer{position:relative;background:rgba(9,24,39,.44)!important;border-color:rgba(230,202,150,.26)!important;box-shadow:none!important;backdrop-filter:blur(3px)}
 .v097-s5-stage .topbar{min-height:clamp(58px,8vh,86px);padding:clamp(8px,1.3vh,13px) clamp(22px,3vw,60px)}
 .v097-s5-stage .brand{color:#fff1db;font-size:clamp(16px,1.36vw,25px)}
@@ -1033,3 +1033,234 @@ html, body, button, input, select, textarea, option {
 @media(max-height:790px){.v097-s5-stage .topbar{min-height:54px}.v097-s5-stage .viewport.unified-stage.ch05-viewport{padding-top:6px;padding-bottom:6px}.v097-s5-stage .ch05-live h2{font-size:clamp(27px,2.65vw,40px)}.v097-s5-stage .ch05-live .v095-live-prompts{min-height:72px}.v097-s5-stage .ch05-live .v095-live-prompt span{font-size:clamp(14px,1.43vw,23px)}.v097-s5-stage .ch05-live .ch05-live-note{padding:7px}.v097-s5-stage .ch05-vote-grid article{padding:12px}.v097-s5-stage .ch05-vote .ch05-question{font-size:clamp(15px,1.25vw,21px)}.v097-s5-stage .ch05-integrate h2{font-size:clamp(31px,3.4vw,51px)}}
 @media(max-width:1100px){.v097-s5-stage .viewport.unified-stage.ch05-viewport{padding-left:6%;padding-right:6%}.v097-s5-stage .ch05-stage h2{font-size:clamp(25px,3vw,52px)}}
 @media(prefers-reduced-motion:reduce){.v097-s5-stage .tug-left,.v097-s5-stage .tug-right,.v097-s5-stage .tug-node,.v097-s5-stage .v095-live-prompt{transition:none!important;animation:none!important;will-change:auto}}
+
+/* ═══════════════════════════════════════════════════════════════
+   v0.9.7 S5｜第六環節 A 投影電影式全幅視覺。
+   僅限定四個正式 ch06 場景。B、C 保持既有介面；不修改 SQL、RPC 或計時語意。
+   既有三問／階梯的 data-ch06-step 與揭露 class 保留，供局部 DOM 更新。
+   ═══════════════════════════════════════════════════════════════ */
+.stage-clean.v097-s6-stage{
+  background:#102338 url("assets/visual-097/cinematic-film-bg.webp") center center/cover no-repeat!important;
+  color:#f6e8d4;isolation:isolate;
+}
+.v097-s6-stage .topbar,.v097-s6-stage .footer{
+  position:relative;background:rgba(9,24,39,.42)!important;
+  border-color:rgba(225,194,144,.24)!important;box-shadow:none!important;
+  backdrop-filter:blur(3px)
+}
+.v097-s6-stage .topbar{min-height:clamp(58px,8vh,86px);padding:clamp(8px,1.3vh,13px) clamp(22px,3vw,60px)}
+.v097-s6-stage .brand{color:#fff1db;font-size:clamp(16px,1.36vw,25px)}
+.v097-s6-stage .brand small,.v097-s6-stage .status-strip,.v097-s6-stage .footer-stage{color:#ddc79f}
+.v097-s6-stage .stage-progress{color:#e4cb96}
+.v097-s6-stage .footer{min-height:34px;padding:6px clamp(22px,3vw,60px)}
+.v097-s6-stage .viewport.unified-stage.ch06-viewport{
+  display:block;min-height:0;padding:clamp(7px,1.1vh,16px) clamp(65px,7.6vw,155px)
+}
+.v097-s6-stage .viewport.unified-stage.ch06-viewport>.display{
+  display:block!important;height:100%;width:100%;min-height:0;overflow:hidden;
+  background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important
+}
+.v097-s6-stage .viewport.unified-stage.ch06-viewport>.display>.ch06-scene{
+  box-sizing:border-box;width:100%;height:100%;max-width:none;min-height:0;
+  color:#f6e8d4;background:linear-gradient(145deg,rgba(10,26,44,.83),rgba(14,32,48,.82));
+  border:1px solid rgba(224,191,131,.37);border-radius:clamp(16px,1.5vw,27px);
+  box-shadow:0 15px 42px rgba(0,0,0,.34);overflow:hidden
+}
+.v097-s6-stage .ch06-topline{color:#d8bd8d;letter-spacing:.22em;font-size:clamp(11px,.89vw,16px);font-weight:800}
+/* 06-01 initial state: a calm cinematic bridge, not a separate page. */
+.v097-s6-stage .ch06-transition{position:relative;text-align:center;justify-content:center;gap:clamp(12px,2.1vh,25px);padding:clamp(18px,3.5vw,58px)}
+.v097-s6-stage .ch06-transition:before{
+  content:"";position:absolute;inset:12% 18%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,rgba(206,157,93,.14),transparent 68%)
+}
+.v097-s6-stage .ch06-transition>*{position:relative}
+.v097-s6-stage .ch06-transition h2{
+  margin:clamp(13px,2.8vh,42px) 0;color:#fff0d4;
+  font-size:clamp(35px,4.35vw,81px);line-height:1.48;letter-spacing:.025em;
+  text-shadow:0 3px 19px rgba(0,0,0,.68)
+}
+.v097-s6-stage .ch06-transition p{font-size:clamp(17px,1.6vw,30px);color:#dae3eb;margin:0}
+/* 06-01 after first reveal: three columns continuously accumulate. */
+.v097-s6-stage .ch06-questions{
+  display:flex;flex-direction:column;min-height:0;
+  padding:clamp(16px,1.8vw,31px) clamp(18px,2.2vw,41px);gap:clamp(7px,1.12vh,15px)
+}
+.v097-s6-stage .ch06-questions>h2{
+  color:#fff0d7;font-size:clamp(29px,3.12vw,59px);line-height:1.14;
+  text-shadow:0 3px 15px #0009;margin:0;text-align:center
+}
+.v097-s6-stage .ch06-questions>.ch06-topline{text-align:center}
+.v097-s6-stage .ch06-sub{
+  color:#d0dae3;text-align:center;font-size:clamp(13px,1.12vw,21px);
+  line-height:1.35;margin:0
+}
+.v097-s6-stage .ch06-question-grid{
+  flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(9px,1.25vw,24px)
+}
+.v097-s6-stage .ch06-question-card{
+  position:relative;min-height:0;padding:clamp(11px,1.25vw,24px);
+  display:flex;flex-direction:column;gap:clamp(5px,.65vh,10px);
+  background:linear-gradient(155deg,rgba(31,59,76,.87),rgba(20,45,65,.92));
+  border:1px solid rgba(197,211,212,.32);border-radius:clamp(12px,1.05vw,20px);
+  box-shadow:inset 0 1px rgba(255,255,255,.04),0 6px 20px #0005;
+  opacity:0;visibility:hidden;transform:translateY(15px) scale(.99);
+  transition:opacity .5s ease,transform .55s ease,visibility 0s linear .6s
+}
+.v097-s6-stage .ch06-question-card:nth-child(2){
+  background:linear-gradient(155deg,rgba(70,59,56,.79),rgba(46,48,59,.91));border-color:rgba(226,192,149,.31)
+}
+.v097-s6-stage .ch06-question-card:nth-child(3){
+  background:linear-gradient(155deg,rgba(66,52,66,.82),rgba(40,45,64,.94));border-color:rgba(229,178,162,.32)
+}
+.v097-s6-stage .ch06-question-card.shown{opacity:1;visibility:visible;transform:none;transition:opacity .5s ease,transform .55s ease,visibility 0s}
+.v097-s6-stage .ch06-question-card:after{height:3px;background:linear-gradient(90deg,#73a6a6,#b8d0ca)}
+.v097-s6-stage .ch06-question-card:nth-child(2):after{background:linear-gradient(90deg,#b99d6f,#edcf98)}
+.v097-s6-stage .ch06-question-card:nth-child(3):after{background:linear-gradient(90deg,#a77e94,#e5bcae)}
+.v097-s6-stage .ch06-q-num{font-family:Georgia,serif;color:#b4dfdb;font-size:clamp(29px,3vw,56px);line-height:1}
+.v097-s6-stage .ch06-question-card:nth-child(2) .ch06-q-num{color:#eed2a3}
+.v097-s6-stage .ch06-question-card:nth-child(3) .ch06-q-num{color:#edbaba}
+.v097-s6-stage .ch06-question-card h3{
+  color:#fff2dc;font-size:clamp(19px,1.85vw,35px);
+  line-height:1.36;letter-spacing:.015em;margin:0;font-weight:850
+}
+.v097-s6-stage .ch06-q-rule{width:45px;height:2px;background:#d8c393;margin:0}
+.v097-s6-stage .ch06-question-card strong{
+  color:#f0e4d2;font-size:clamp(13px,1.18vw,23px);
+  line-height:1.5;margin:auto 0 0;font-weight:720
+}
+.v097-s6-stage .ch06-question-card p{
+  color:#cedce5;border-color:rgba(227,209,173,.25);
+  font-size:clamp(12px,1.02vw,19px);line-height:1.53;
+  padding-top:clamp(6px,.8vh,13px);margin:0
+}
+.v097-s6-stage .ch06-footer-note{
+  padding:0;text-align:center;color:#c9af84;font-size:clamp(10px,.84vw,16px)
+}
+/* 06-02: a true quiet pause; timer is the visual subject. */
+.v097-s6-stage .ch06-silence{
+  position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.5vh,22px);
+  text-align:center;padding:clamp(18px,2vw,40px)
+}
+.v097-s6-stage .ch06-silence:before{content:"";position:absolute;inset:8%;pointer-events:none;background:radial-gradient(ellipse at center,rgba(185,143,92,.14),transparent 61%)}
+.v097-s6-stage .ch06-silence>*{position:relative}
+.v097-s6-stage .ch06-silence h2{color:#fff0d9;font-size:clamp(40px,4.9vw,91px);line-height:1.16;margin:0}
+.v097-s6-stage .ch06-silence p{color:#d6e1e8;font-size:clamp(18px,1.58vw,30px);margin:0}
+.v097-s6-stage .ch06-clock-value{
+  color:#f6dba8;font-size:clamp(84px,10vw,173px);
+  font-variant-numeric:tabular-nums;line-height:1.14;
+  text-shadow:0 5px 25px #0009;margin:clamp(10px,2vh,35px) 0
+}
+.v097-s6-stage .ch06-time-track{width:min(600px,63%);height:7px;background:rgba(227,225,209,.24);border:1px solid rgba(231,210,171,.26)}
+.v097-s6-stage .ch06-time-fill{background:linear-gradient(90deg,#719ba2,#e7cb92)}
+.v097-s6-stage .ch06-clock-state{color:#d5bf9b;font-size:clamp(13px,1vw,21px);margin:clamp(6px,1.2vh,18px) 0 0}
+/* 06-03: cumulative stairs stay visible; the final message appears only at step 3. */
+.v097-s6-stage .ch06-ending{
+  position:relative;background:linear-gradient(145deg,rgba(12,28,46,.69),rgba(16,37,54,.67))!important
+}
+.v097-s6-stage .ch06-ending:before{content:"";position:absolute;inset:9% 15%;pointer-events:none;background:radial-gradient(ellipse at center,rgba(202,164,98,.1),transparent 69%)}
+.v097-s6-stage .ch06-ending-label{top:4.5%;left:4%;color:#d9c192;font-size:clamp(10px,.82vw,17px)}
+.v097-s6-stage .ch06-stairs{left:2.5%;top:6%;width:95%;height:83%}
+.v097-s6-stage .ch06-stair-glow{stroke:#e9c88d;opacity:.18;stroke-width:17}
+.v097-s6-stage .ch06-stair-line{stroke:#f4dfb4;stroke-width:7;filter:drop-shadow(0 0 12px #d5b47a80)}
+.v097-s6-stage .ch06-stair-title{color:#fff1db;text-shadow:0 3px 18px #000c;max-width:35%}
+.v097-s6-stage .ch06-stair-title span{color:#e6c991;font-size:clamp(11px,.9vw,17px)}
+.v097-s6-stage .ch06-stair-title h2{font-size:clamp(34px,3.8vw,75px);color:#fff3de;letter-spacing:.02em}
+.v097-s6-stage .ch06-stair-title p{font-size:clamp(12px,1.05vw,21px);color:#d7e1e6}
+.v097-s6-stage .ch06-stair-title.step1{left:5%;top:61%}
+.v097-s6-stage .ch06-stair-title.step2{left:38%;top:36%}
+.v097-s6-stage .ch06-stair-title.step3{left:67%;top:12%}
+.v097-s6-stage .ch06-stair-title.step3 h2{color:#f9da9e}
+.v097-s6-stage .ch06-final-whisper{
+  right:4%;bottom:4.4%;color:#f2d8a6;text-align:right;
+  font-size:clamp(12px,1.02vw,21px);letter-spacing:.08em
+}
+/* 06-04: the final frame returns to the opening question without new interaction. */
+.v097-s6-stage .ch06-curtain{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(ellipse at 50% 51%,rgba(183,135,72,.2),transparent 59%),rgba(9,25,43,.67)!important;
+  box-shadow:inset 0 0 100px rgba(7,17,30,.5)
+}
+.v097-s6-stage .ch06-curtain::before,.v097-s6-stage .ch06-curtain::after{display:none}
+.v097-s6-stage .ch06-curtain-kicker{top:clamp(22px,4.7vh,59px);font-size:clamp(11px,.92vw,19px);color:#dfc69a}
+.v097-s6-stage .ch06-curtain-main{gap:clamp(14px,2.7vh,35px);padding:clamp(20px,3vw,50px);max-width:100%}
+.v097-s6-stage .ch06-curtain-mark{color:#e2be83;font-size:clamp(26px,2.8vw,57px)}
+.v097-s6-stage .ch06-curtain h2{
+  font-size:clamp(37px,4.6vw,85px);margin:0;line-height:1.3;color:#fff1d6;
+  text-shadow:0 4px 24px #000a
+}
+.v097-s6-stage .ch06-curtain p{color:#e8d4b1;font-size:clamp(19px,1.87vw,37px);line-height:1.45}
+.v097-s6-stage .ch06-curtain i{background:linear-gradient(90deg,transparent,#e3c58e,transparent);width:min(290px,45vw)}
+.v097-s6-stage .ch06-curtain small{font-size:clamp(13px,1.12vw,22px);color:#c6d7e1}
+@media(max-height:790px){
+  .v097-s6-stage .topbar{min-height:54px}
+  .v097-s6-stage .viewport.unified-stage.ch06-viewport{padding-top:6px;padding-bottom:6px}
+  .v097-s6-stage .ch06-questions{padding:12px 20px;gap:6px}
+  .v097-s6-stage .ch06-questions>h2{font-size:34px}
+  .v097-s6-stage .ch06-sub{font-size:13px}
+  .v097-s6-stage .ch06-question-card{padding:11px;gap:4px}
+  .v097-s6-stage .ch06-q-num{font-size:35px}
+  .v097-s6-stage .ch06-question-card h3{font-size:clamp(18px,1.7vw,28px)}
+  .v097-s6-stage .ch06-question-card strong{font-size:clamp(12px,1.08vw,17px)}
+  .v097-s6-stage .ch06-question-card p{font-size:clamp(11px,.92vw,15px);line-height:1.44}
+  .v097-s6-stage .ch06-footer-note{font-size:11px}
+  .v097-s6-stage .ch06-stair-title h2{font-size:clamp(32px,3.6vw,58px)}
+  .v097-s6-stage .ch06-stair-title.step1{top:57%}
+  .v097-s6-stage .ch06-stair-title.step2{top:34%}
+  .v097-s6-stage .ch06-stair-title.step3{top:9%}
+}
+@media(max-width:1050px){
+  .v097-s6-stage .viewport.unified-stage.ch06-viewport{padding-left:5.9%;padding-right:5.9%}
+}
+@media(prefers-reduced-motion:reduce){
+  .v097-s6-stage .ch06-question-card,.v097-s6-stage .ch06-stair-title,
+  .v097-s6-stage .ch06-stair-segment,.v097-s6-stage .ch06-stair-segment path,
+  .v097-s6-stage .ch06-final-whisper,.v097-s6-stage .ch06-time-fill{transition:none!important;animation:none!important}
+}
+/* S5 視覺校正：三問卡片的問題與情境應居中閱讀，而非壓在卡片底部。 */
+.v097-s6-stage .ch06-question-card{justify-content:space-evenly}
+.v097-s6-stage .ch06-question-card strong{margin:0;font-size:clamp(14px,1.22vw,24px)}
+.v097-s6-stage .ch06-question-card p{font-size:clamp(12px,1.06vw,20px)}
+/* 防止大解析度／快速連續揭露時，較高階段的階梯線因 dash 動畫尚未完成而暫時不可見；以階段淡入取代長路徑描繪。 */
+.v097-s6-stage .ch06-stair-segment{transition:opacity .5s ease}
+.v097-s6-stage .ch06-stair-segment path{stroke-dasharray:none!important;stroke-dashoffset:0!important;transition:none!important}
+
+
+/* ==============================================================
+   v0.9.7 S6｜六環節總驗收小修版（投影端專用）
+   限定：02-01、03-01/02、04-02/03、05-02、06-01
+   不更動投票、角色、資料庫、Reveal 或動畫 DOM 行為。
+   ============================================================= */
+/* 02-01：兩輪結果的圖例、有效樣本、百分比後排可閱讀 */
+.v097-s12-stage .pair-group-title{font-size:clamp(21px,1.7vw,34px)}
+.v097-s12-stage .pair-group>p{font-size:clamp(16px,1.08vw,21px);margin:4px 0 9px}
+.v097-s12-stage .pair-option>div:first-child{font-size:clamp(17px,1.22vw,25px);gap:8px}
+.v097-s12-stage .pair-highlight small{font-size:clamp(14px,1vw,20px)}
+.v097-s12-stage .pair-pending{font-size:clamp(15px,1.12vw,22px)}
+/* 03-01：進度中的組別標示；不揭露角色身分 */
+.v097-s3-stage .v097-ch03-card-back small{font-size:clamp(13px,.99vw,19px)}
+.v097-s3-stage .v097-ch03-draw-status{font-size:clamp(14px,1.12vw,22px)}
+/* 03-02：先理解／再挑戰兩個任務與觀點指引 */
+.v097-s3-stage .v097-ch03-steps p{font-size:clamp(15px,1.1vw,21px);line-height:1.4;margin-top:3px}
+.v097-s3-stage .v097-ch03-perspective span{font-size:clamp(14px,1.05vw,22px)}
+/* 04-02：以動態摘要承擔後排資訊，不要求閱讀角色卡內的小字 */
+.v097-s4-stage .ch04-compare-text small{font-size:clamp(14px,1.02vw,20px)}
+.v097-s4-stage .ch04-compare-text blockquote{font-size:clamp(16px,1.17vw,24px);line-height:1.48}
+.v097-s4-stage .ch04-compare-text p{font-size:clamp(14px,1.03vw,21px);line-height:1.38}
+.v097-s4-stage .ch04-caption{font-size:clamp(13px,.87vw,18px)}
+/* 04-03：四選一內容本身比字母編號重要 */
+.v097-s4-stage .ch04-option{font-size:clamp(18px,1.4vw,27px);line-height:1.38}
+/* 05-02：只放大關鍵統計文字，不更動拉鋸運動行為 */
+.v097-s5-stage .ch05-rail-labels small{font-size:clamp(15px,1.1vw,23px)}
+.v097-s5-stage .ch05-rail-foot{font-size:clamp(13px,.97vw,19px)}
+/* 06-01：將三問的引導文提升為可讀文字，適度壓縮字距留出空間 */
+.v097-s6-stage .ch06-question-card strong{font-size:clamp(16px,1.26vw,25px);line-height:1.38}
+.v097-s6-stage .ch06-question-card p{font-size:clamp(15px,1.11vw,22px);line-height:1.4}
+.v097-s6-stage .ch06-sub{font-size:clamp(16px,1.16vw,23px)}
+@media(max-height:790px){
+  .v097-s6-stage .ch06-question-card{gap:3px;padding:10px}
+  .v097-s6-stage .ch06-question-card h3{font-size:clamp(18px,1.7vw,28px)}
+  .v097-s6-stage .ch06-question-card strong{font-size:clamp(15px,1.13vw,19px);line-height:1.35}
+  .v097-s6-stage .ch06-question-card p{font-size:clamp(14px,1.05vw,18px);line-height:1.35;padding-top:5px}
+  .v097-s6-stage .ch06-sub{font-size:15px}
+}
