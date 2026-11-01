@@ -186,7 +186,8 @@
    updateStatus({ready:false,awaitingChoice:!!sessionId,connected:false,error:''});
  }
  async function createSession(){
-   const id=await rpc('lecture_host_create',{p_title:'一張照片，為什麼讓我在意？'});
+   // v0.9.8：只呼叫安全新場次 RPC；未升級 SQL 時拒絕建立，避免誤刪歷史資料。
+   const id=await rpc('lecture_host_create_safe',{p_title:'這張照片，你怎麼看？'});
    sessionId=id;projectionToken=null;localStorage.setItem(SESSION_KEY,id);
    const u=new URL(location.href);u.searchParams.set('session',id);history.replaceState(null,'',u);
    ready=true;status.sessionId=id;

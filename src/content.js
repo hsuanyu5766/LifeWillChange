@@ -10,7 +10,7 @@
   ];
   const scene = (id,ch,title,text,kind,opts={}) => ({ id, ch, title, text, kind, steps: [], ...opts });
   const scenes = [
-    scene('s01-welcome','ch1','一張照片，為什麼讓我在意？','生命教育互動講座｜40 分鐘。請掃描 QR Code 選擇組別，進入後手機將配合講座活動顯示題目。','welcome'),
+    scene('s01-welcome','ch1','這張照片，你怎麼看？','生命教育互動講座｜40 分鐘。請掃描 QR Code 選擇組別，進入後手機將配合講座活動顯示題目。','welcome'),
     scene('s01-photo','ch1','看見這兩張照片','先觀察，再覺察自己的判斷；接著完成第一輪投票。','photo',{activityId:'a-photo-first',steps:['如果照片中的人是你，你能接受這樣的照片被別人看見嗎？','現在加入新的身分條件：假設你是一名國小教師。','如果你是一名國小教師，而且是照片中的人，你還能接受這樣的照片被別人看見嗎？']}),
     scene('s01-prompt','ch1','第一次投票｜如果是我','如果照片裡的人是你，你能接受這兩張照片被別人看見嗎？','activity',{activityId:'a-photo-first'}),
     scene('s02-reveal','ch2','如果我是老師呢？','照片不變，只加入教師身分這個條件，再重新回答。','identity',{activityId:'a-photo-teacher',steps:['現在，只多知道一件事：如果你是一位國小教師呢？','假如你是照片中的教師，你還能接受這樣的照片被別人看見嗎？']}),
@@ -79,6 +79,6 @@
     's06-questions','s06-silence','s06-ending','s06-curtain'
   ];
   const presentationScenes=presentationIds.map(id=>scenes.find(s=>s.id===id));
-  const spec = Object.freeze({id:'photo-lecture',title:'一張照片，為什麼讓我在意？',version:'0.9.7-s5',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8});
+  const spec = Object.freeze({id:'photo-lecture',title:'這張照片，你怎麼看？',version:'0.9.8',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8});
   window.LectureContent = spec;
 })();
