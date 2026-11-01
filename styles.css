@@ -1264,3 +1264,24 @@ html, body, button, input, select, textarea, option {
   .v097-s6-stage .ch06-question-card p{font-size:clamp(14px,1.05vw,18px);line-height:1.35;padding-top:5px}
   .v097-s6-stage .ch06-sub{font-size:15px}
 }
+
+/* v0.9.8.1｜投影等待與錯誤畫面使用正式電影底圖，不再顯示舊版山景。 */
+#app>.mobile-shell.stage-connect-screen{
+  min-height:100svh;display:flex;align-items:center;justify-content:center;
+  box-sizing:border-box;padding:clamp(20px,4vw,70px);
+  background:#102438 url("assets/visual-097/cinematic-film-bg.webp") center/cover no-repeat!important;
+  color:#f5e9d7;
+}
+#app>.mobile-shell.stage-connect-screen::before{content:"";position:absolute;inset:0;pointer-events:none;background:rgba(7,19,31,.36)}
+.stage-connect-card{position:relative;width:min(660px,96%);padding:clamp(26px,4vw,52px);box-sizing:border-box;
+  background:rgba(10,29,47,.91);border:1px solid rgba(227,195,139,.45);
+  border-radius:24px;box-shadow:0 22px 65px rgba(0,0,0,.35);text-align:center;
+}
+.stage-connect-card .eyebrow{color:#d7bc8e;font-size:13px;letter-spacing:.15em;margin-bottom:12px}
+.stage-connect-card .stage-connect-icon{font-size:38px;color:#d7bc8e;margin:12px 0}
+.stage-connect-card h1{font-size:clamp(25px,3vw,44px);line-height:1.3;color:#fff1de;margin:10px 0 18px}
+.stage-connect-card p{font-size:clamp(15px,1.3vw,20px);line-height:1.7;color:#e2e3e5}
+.stage-connect-card .stage-connect-tip{font-size:clamp(14px,1.05vw,17px);color:#e7d2ae;padding:12px;border-radius:10px;background:rgba(217,172,109,.1)}
+.stage-connect-card .stage-connect-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:22px 0}
+.stage-connect-card small{color:#b7c5d0;display:block}
+@media(max-width:650px){.stage-connect-card{padding:25px 18px}.stage-connect-card .stage-connect-actions button{width:100%}}
