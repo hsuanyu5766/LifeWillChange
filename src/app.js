@@ -249,7 +249,7 @@
    ${!Adapter.status.authenticated?`<form id="host-login-form"><label>Email</label><input name="email" type="email" required autocomplete="username"><label>密碼</label><input name="password" type="password" required autocomplete="current-password"><button class="btn primary submit" type="submit">登入主控</button></form>`:
    Adapter.status.awaitingChoice?`<div class="session-choice"><div class="session-choice-card"><div class="eyebrow">偵測到上次使用的講座</div><h2>新場次預設清除舊紀錄</h2><p class="muted">選擇「清除舊資料並重新開始」會移除這位主持人的歷史場次、投票回覆、參與者與角色抽卡紀錄；此動作不可復原。若需要保留資料，請選擇下方的「保留歷史」模式。</p><div class="session-choice-actions"><button class="btn" type="button" data-action="resume-session" ${ui.entryBusy?'disabled':''}>繼續既有活動</button><button class="btn primary" type="button" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" type="button" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>建立新場次（保留歷史）</button></div><p class="muted">新場次會從零開始，並產生新的 A 投影連結與 C 聽眾 QR Code；舊投影與聽眾連結會失效（清空模式）。</p></div></div>`:
    `<div class="session-choice-actions"><button class="btn primary submit" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>保留歷史另開場次</button></div>`}
-   ${Adapter.status.authenticated?`<p class="build-indicator">網站版本：v0.9.8.5 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署是否完整</a></p><p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
+   ${Adapter.status.authenticated?`<p class="build-indicator">網站版本：v0.9.8.6 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署是否完整</a></p><p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
    ${Adapter.status.error?`<p class="caution">${htmlEsc(Adapter.status.error)}</p>`:''}${ui.toast?`<p class="caution transient-notice" role="alert">${htmlEsc(ui.toast)}</p>`:''}</div></main></div></div>`;
  }
  function stageView(){
@@ -271,7 +271,7 @@
   const scene=currentScene(),chapter=currChapter(),open=active(),run=relevantRun(scene),a=scene.activityId?spec.activities[scene.activityId]:null;
   if(!ui.reviewRunId&&state.runs.length)ui.reviewRunId=state.runs[state.runs.length-1].id;
   return `<div class="control-shell">
-   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.5</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p><p class="build-indicator">目前前端 v0.9.8.5 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署版本</a></p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
+   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.6</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p><p class="build-indicator">目前前端 v0.9.8.6 · <a href="version-check.html" target="_blank" rel="noopener">檢查部署版本</a></p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
    ${!remote?'<div class="demo-banner">本機示範，須部署 Supabase 才能跨裝置操作</div>':''}
    <nav class="director-chapters" aria-label="六環節目前進度">${spec.chapters.map((c,i)=>`<div class="director-chapter ${chapter.id===c.id?'active':''}"><span>0${i+1}</span><strong>${htmlEsc(c.name)}</strong></div>`).join('')}</nav>
    <div class="control-grid">

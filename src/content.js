@@ -81,6 +81,6 @@
     's06-questions','s06-silence','s06-ending','s06-curtain'
   ];
   const presentationScenes=presentationIds.map(id=>scenes.find(s=>s.id===id));
-  const spec = Object.freeze({id:'photo-lecture',title:'一張照片，為什麼讓我在意？',version:'0.9.8.5',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8,groupNames});
+  const spec = Object.freeze({id:'photo-lecture',title:'一張照片，為什麼讓我在意？',version:'0.9.8.6',chapters,scenes,presentationIds,presentationScenes,activities,roleCards,groupCount:8,groupNames});
   window.LectureContent = spec;
 })();
