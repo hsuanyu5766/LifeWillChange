@@ -1335,3 +1335,53 @@ html, body, button, input, select, textarea, option {
 .v0985-ending-picture{display:block;width:100%;height:100%;margin:0;padding:0}
 .v0985-ending-image{display:block;width:100%;height:100%;max-width:none;object-fit:contain;object-position:center;image-rendering:auto}
 /* B 主控及 C 聽眾端完全不使用這組投影樣式。 */
+
+
+/* ════════════════════════════════════════════════════════════════════
+   v0.9.8.6｜02-02 教師形象三張圖卡：隨瀏覽器可用高度完整顯示
+   根因：舊版 img height:auto 會保留固有高度，超過 grid 剩餘高度後遭 overflow:hidden 裁切。
+   本修正僅作用於 A 投影的 s02-reasons；不更動素材、B 主控或 C 聽眾。
+   ════════════════════════════════════════════════════════════════════ */
+.v097-s12-s02-reasons .v097-expectation-stage{
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr) auto;
+  justify-items:center;
+  align-items:stretch;
+  align-content:stretch;
+  gap:clamp(4px,.9vh,12px);
+  width:100%;height:100%;min-width:0;min-height:0;
+  overflow:hidden;
+  padding:clamp(4px,.8vh,11px) clamp(5px,.7vw,14px);
+}
+.v097-s12-s02-reasons .v097-expectation-stage .v097-overline,
+.v097-s12-s02-reasons .v097-expectation-stage h2,
+.v097-s12-s02-reasons .v097-expectation-note{max-width:100%;min-width:0}
+.v097-s12-s02-reasons .v097-expectation-stage .teacher-expected-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:minmax(0,1fr);
+  gap:clamp(7px,1vw,21px);
+  width:100%;height:100%;min-height:0;min-width:0;
+  flex:none;align-items:stretch;
+  overflow:visible;
+}
+.v097-s12-s02-reasons .v097-expectation-stage .teacher-expected-grid figure{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;min-width:0;min-height:0;
+  margin:0;padding:0;
+  overflow:hidden;
+}
+.v097-s12-s02-reasons .v097-expectation-stage .teacher-expected-grid img{
+  display:block;
+  width:100%;height:100%;
+  max-width:100%;max-height:100%;
+  object-fit:contain;
+  object-position:center center;
+  filter:drop-shadow(0 5px 11px rgba(0,0,0,.3));
+}
+@media(max-height:680px){
+  .v097-s12-s02-reasons .v097-expectation-stage{gap:4px;padding-block:3px}
+  .v097-s12-s02-reasons .v097-expectation-stage h2{font-size:clamp(19px,2.25vw,29px);line-height:1.22}
+  .v097-s12-s02-reasons .v097-expectation-stage .v097-overline{font-size:clamp(10px,.82vw,13px)}
+  .v097-s12-s02-reasons .v097-expectation-note{font-size:clamp(11px,.9vw,15px);line-height:1.35}
+}
