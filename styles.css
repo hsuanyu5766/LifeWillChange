@@ -1338,7 +1338,7 @@ html, body, button, input, select, textarea, option {
 
 
 /* ════════════════════════════════════════════════════════════════════
-   v0.9.8.7｜02-02 教師形象三張圖卡：新素材替換＋隨瀏覽器可用高度完整顯示
+   v0.9.8.8｜02-02 教師形象三張圖卡：新素材替換＋隨瀏覽器可用高度完整顯示
    根因：舊版 img height:auto 會保留固有高度，超過 grid 剩餘高度後遭 overflow:hidden 裁切。
    本修正僅作用於 A 投影的 s02-reasons；不更動素材、B 主控或 C 聽眾。
    ════════════════════════════════════════════════════════════════════ */
@@ -1385,3 +1385,7 @@ html, body, button, input, select, textarea, option {
   .v097-s12-s02-reasons .v097-expectation-stage .v097-overline{font-size:clamp(10px,.82vw,13px)}
   .v097-s12-s02-reasons .v097-expectation-note{font-size:clamp(11px,.9vw,15px);line-height:1.35}
 }
+
+/* v0.9.8.8 | 02-02: transparent isolated teacher cards on a single shared film background. */
+.v097-s12-s02-reasons .teacher-expected-grid figure{background:transparent!important;border:0!important;box-shadow:none!important}
+.v097-s12-s02-reasons .teacher-expected-grid img{background:transparent!important;filter:drop-shadow(0 8px 12px rgba(2,9,16,.4))}
