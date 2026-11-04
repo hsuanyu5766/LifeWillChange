@@ -1,4 +1,4 @@
-/* v0.9.8.7｜教師形象圖卡素材替換版 */
+/* v0.9.8.8｜教師形象圖卡素材替換版 */
 (function(){
  'use strict';
  const spec=window.LectureContent,Core=window.LectureCore,Adapter=window.LectureAdapter,PhotoFlow=window.LecturePhotoFlow;
@@ -7,7 +7,7 @@
  if(expectedBuild && spec?.version!==expectedBuild){
    const root=document.querySelector('#app');
    if(root){
-     root.innerHTML='<main style="max-width:680px;margin:12vh auto;padding:32px;font:18px/1.7 sans-serif;color:#17314b"><h1>網站檔案版本不一致</h1><p>首頁與講座資料的版本不同，已停止操作，避免混用程式。</p><p id="version-diagnostic"></p><p>請開啟 <a href="version-check.html?from=0987-fix1">版本檢查頁</a>，確認內容檔案是否與首頁一致。</p></main>';
+     root.innerHTML='<main style="max-width:680px;margin:12vh auto;padding:32px;font:18px/1.7 sans-serif;color:#17314b"><h1>網站檔案版本不一致</h1><p>首頁與講座資料的版本不同，已停止操作，避免混用程式。</p><p id="version-diagnostic"></p><p>請開啟 <a href="version-check.html?from=0988-clean-cards">版本檢查頁</a>，確認內容檔案是否與首頁一致。</p></main>';
      const diagnostic=root.querySelector('#version-diagnostic');
      if(diagnostic)diagnostic.textContent='首頁要求：v'+expectedBuild+'；實際講座資料：v'+String(spec?.version||'未載入');
    }
@@ -254,7 +254,7 @@
    ${!Adapter.status.authenticated?`<form id="host-login-form"><label>Email</label><input name="email" type="email" required autocomplete="username"><label>密碼</label><input name="password" type="password" required autocomplete="current-password"><button class="btn primary submit" type="submit">登入主控</button></form>`:
    Adapter.status.awaitingChoice?`<div class="session-choice"><div class="session-choice-card"><div class="eyebrow">偵測到上次使用的講座</div><h2>新場次預設清除舊紀錄</h2><p class="muted">選擇「清除舊資料並重新開始」會移除這位主持人的歷史場次、投票回覆、參與者與角色抽卡紀錄；此動作不可復原。若需要保留資料，請選擇下方的「保留歷史」模式。</p><div class="session-choice-actions"><button class="btn" type="button" data-action="resume-session" ${ui.entryBusy?'disabled':''}>繼續既有活動</button><button class="btn primary" type="button" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" type="button" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>建立新場次（保留歷史）</button></div><p class="muted">新場次會從零開始，並產生新的 A 投影連結與 C 聽眾 QR Code；舊投影與聽眾連結會失效（清空模式）。</p></div></div>`:
    `<div class="session-choice-actions"><button class="btn primary submit" data-action="create-session" ${ui.entryBusy?'disabled':''}>清除舊場次資料，開始新場次</button><button class="btn ghost" data-action="create-session-preserve" ${ui.entryBusy?'disabled':''}>保留歷史另開場次</button></div>`}
-   ${Adapter.status.authenticated?`<p class="build-indicator">網站版本：v0.9.8.7 · <a href="version-check.html?from=0987-fix1" target="_blank" rel="noopener">檢查部署是否完整</a></p><p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
+   ${Adapter.status.authenticated?`<p class="build-indicator">網站版本：v0.9.8.8 · <a href="version-check.html?from=0988-clean-cards" target="_blank" rel="noopener">檢查部署是否完整</a></p><p><button class="btn ghost" data-action="logout">登出主持人</button></p>`:''}
    ${Adapter.status.error?`<p class="caution">${htmlEsc(Adapter.status.error)}</p>`:''}${ui.toast?`<p class="caution transient-notice" role="alert">${htmlEsc(ui.toast)}</p>`:''}</div></main></div></div>`;
  }
  function stageView(){
@@ -276,7 +276,7 @@
   const scene=currentScene(),chapter=currChapter(),open=active(),run=relevantRun(scene),a=scene.activityId?spec.activities[scene.activityId]:null;
   if(!ui.reviewRunId&&state.runs.length)ui.reviewRunId=state.runs[state.runs.length-1].id;
   return `<div class="control-shell">
-   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.7</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p><p class="build-indicator">目前前端 v0.9.8.7 · <a href="version-check.html?from=0987-fix1" target="_blank" rel="noopener">檢查部署版本</a></p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
+   <header class="control-top"><div><div class="eyebrow">講者私人操作端 · v0.9.8.8</div><h1>一張照片，為什麼讓我在意？</h1><p>六環節・情境導演式主控・即時回饋管理</p><p class="build-indicator">目前前端 v0.9.8.8 · <a href="version-check.html?from=0988-clean-cards" target="_blank" rel="noopener">檢查部署版本</a></p></div><div class="control-status"><span class="dot ${open?'green':''}"></span>${open?'活動開放中':'目前未開放活動'}<small>${remote?(Adapter.status.connected?'即時同步':'備援輪詢'):'本機模擬'}</small></div></header>
    ${!remote?'<div class="demo-banner">本機示範，須部署 Supabase 才能跨裝置操作</div>':''}
    <nav class="director-chapters" aria-label="六環節目前進度">${spec.chapters.map((c,i)=>`<div class="director-chapter ${chapter.id===c.id?'active':''}"><span>0${i+1}</span><strong>${htmlEsc(c.name)}</strong></div>`).join('')}</nav>
    <div class="control-grid">
@@ -508,7 +508,7 @@
     return `<div class="v095-photo-stage v096-photo-stage ${isTeacher?'v095-identity':''}" data-photo-phase="${phase}"><div class="v095-photo-topline">${isTeacher?'CHAPTER 02 · IDENTITY':'CHAPTER 01 · FIRST IMPRESSION'}</div><div class="v095-photogrid"><figure><img src="assets/photos/photo-1-v090.webp" alt="男性日常照片" width="760" height="760" decoding="async" fetchpriority="high" />${isTeacher?'<figcaption class="v096-teacher-label">假設為教師</figcaption>':''}</figure><figure><img src="assets/photos/photo-2-v090.webp" alt="女性日常照片" width="760" height="760" decoding="async" fetchpriority="high" />${isTeacher?'<figcaption class="v096-teacher-label">假設為教師</figcaption>':''}</figure></div><div class="v095-photo-question">${htmlEsc(question)}</div><p class="v095-photo-hint">${htmlEsc(hint)}</p></div>`;
   }
   if(scene.kind==='pair-results')return renderPairComparison();
-  if(scene.kind==='teacher-expectations')return `<div class="teacher-expected v097-expectation-stage"><div class="v097-overline">CHAPTER 02 · SOCIAL EXPECTATIONS</div><h2>大家期待的老師是什麼樣子？</h2><div class="teacher-expected-grid">${[['assets/visual-097/expectation-attire-v0987.webp','穿著打扮'],['assets/visual-097/expectation-private-life-v0987.webp','私人生活'],['assets/visual-097/expectation-public-v0987.webp','公共場合']].map(([f,label])=>`<figure class="v097-expectation-figure"><img src="${f}" alt="${label}：常見的教師形象期待（供討論，非規範）" width="520" height="760" loading="eager" decoding="async"/></figure>`).join('')}</div><p class="v097-expectation-note">這些是值得檢視的社會期待，不是對教師生活樣貌的標準答案。</p></div>`;
+  if(scene.kind==='teacher-expectations')return `<div class="teacher-expected v097-expectation-stage"><div class="v097-overline">CHAPTER 02 · SOCIAL EXPECTATIONS</div><h2>大家期待的老師是什麼樣子？</h2><div class="teacher-expected-grid">${[['assets/visual-097/expectation-attire-clean-v0988.webp','穿著打扮'],['assets/visual-097/expectation-private-life-clean-v0988.webp','私人生活'],['assets/visual-097/expectation-public-clean-v0988.webp','公共場合']].map(([f,label])=>`<figure class="v097-expectation-figure"><img src="${f}" alt="${label}：常見的教師形象期待（供討論，非規範）" width="850" height="1282" loading="eager" decoding="async"/></figure>`).join('')}</div><p class="v097-expectation-note">這些是值得檢視的社會期待，不是對教師生活樣貌的標準答案。</p></div>`;
   if(scene.kind==='expectations')return `<div class="expectations">${['自我期待','學生期待','社會期待'].map(s=>`<div>${s}</div>`).join('')}</div>`;
   if(scene.kind==='theory')return `<div class="theory"><h2>高夫曼｜劇場理論</h2><div class="cols"><div><strong>前臺</strong><p>向特定觀眾呈現的形象</p></div><div><strong>後臺</strong><p>相對不對同一觀眾開放的情境</p></div></div><p>兩者都是情境中的自我呈現。</p></div>`;
   if(scene.kind==='rolecards'){
